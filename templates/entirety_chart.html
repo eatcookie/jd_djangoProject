@@ -1,0 +1,350 @@
+<!-- 继承base首页页面 -->
+{% extends 'base.html' %}
+
+
+<!--新添的content主体内容块，包含多个数据分析图表的页面，通过 ECharts 库实现了丰富的数据可视化效果 -->
+{% block content %}
+
+    <style>
+        .ellipsis {
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 溢出隐藏 */
+            text-overflow: ellipsis; /* 用省略号表示溢出部分 */
+            max-width: 200px; /* 设置文本最大宽度，根据需要调整 */
+        }
+    </style>
+
+
+    <!--数据整体分析wrapper -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--数据整体分析栏，显示标题和导航链接-->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="breadcrumb-title pe-3">数据整体分析</div>
+                <div class="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">整体分析图表</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!--end breadcrumb-->
+
+
+
+            <!-- 行容器，数据整体分析的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">整体分析图表</h6>
+            <hr/>
+
+
+
+
+            <!--数据信息图，显示标题和4个图表的card卡片-->
+            <div class="row row-cols-md-2">
+
+                <!--第一个图表的card卡片，div容器作为图表容器，使用特定的id w-chart1来方便后续通过JavaScript进行初始化-->
+                <div class="col">
+                    <div class="card radius-10 ">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+
+                                <div>
+                                    <h5 class="mb-0">商品品牌分布</h5>
+                                </div>
+
+{#                                <div class="dropdown ms-auto">#}
+{#                                    <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer"#}
+{#                                         data-bs-toggle="dropdown"><i class='bx bx-dots-horizontal-rounded font-22'></i>#}
+{#                                    </div>#}
+{#                                    <ul class="dropdown-menu">#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Action</a>#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>#}
+{#                                        </li>#}
+{#                                        <li>#}
+{#                                            <hr class="dropdown-divider">#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>#}
+{#                                        </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+
+                            </div>
+                            <div id="e-chart1" style="width: 100%;height: 300px"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--第二个图表的card卡片，div容器作为图表容器，使用特定的id w-chart2来方便后续通过JavaScript进行初始化-->
+                <div class="col">
+                    <div class="card radius-10">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-0">店铺商品数量</h5>
+                                </div>
+
+{#                                <div class="dropdown ms-auto">#}
+{#                                    <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer"#}
+{#                                         data-bs-toggle="dropdown"><i class='bx bx-dots-horizontal-rounded font-22'></i>#}
+{#                                    </div>#}
+{#                                    <ul class="dropdown-menu">#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Action</a>#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>#}
+{#                                        </li>#}
+{#                                        <li>#}
+{#                                            <hr class="dropdown-divider">#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>#}
+{#                                        </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+
+                            </div>
+                            <div id="e-chart2" style="width: 100%;height: 300px"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--第三个图表的card卡片，div容器作为图表容器，使用特定的id w-chart3来方便后续通过JavaScript进行初始化-->
+                <div class="col">
+                    <div class="card radius-10">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-0">价格区间统计</h5>
+                                </div>
+
+{#                                <div class="dropdown ms-auto">#}
+{#                                    <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer"#}
+{#                                         data-bs-toggle="dropdown"><i class='bx bx-dots-horizontal-rounded font-22'></i>#}
+{#                                    </div>#}
+{#                                    <ul class="dropdown-menu">#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Action</a>#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>#}
+{#                                        </li>#}
+{#                                        <li>#}
+{#                                            <hr class="dropdown-divider">#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>#}
+{#                                        </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+
+                            </div>
+                            <div class="" id="e-chart3" style="width: 100%;height: 300px"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--第四个图表的card卡片，div容器作为图表容器，使用特定的id w-chart4来方便后续通过JavaScript进行初始化-->
+                <div class="col">
+                    <div class="card radius-10">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-0">销量区间统计（总评数）</h5>
+                                </div>
+
+{#                                <div class="dropdown ms-auto">#}
+{#                                    <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer"#}
+{#                                         data-bs-toggle="dropdown"><i class='bx bx-dots-horizontal-rounded font-22'></i>#}
+{#                                    </div>#}
+{#                                    <ul class="dropdown-menu">#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Action</a>#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>#}
+{#                                        </li>#}
+{#                                        <li>#}
+{#                                            <hr class="dropdown-divider">#}
+{#                                        </li>#}
+{#                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>#}
+{#                                        </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+
+                            </div>
+                            <div class="" id="e-chart4" style="width: 100%;height: 300px"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+    <!--end page wrapper -->
+{% endblock %}
+
+
+
+
+
+
+
+<!--在 %block jss%  中引入了多个 JavaScript 库和脚本，包括 Bootstrap、jQuery、ECharts 等-->
+{% block jss %}
+    <script src="/static/assets/js/bootstrap.bundle.min.js"></script>
+    <!--plugins-->
+    <script src="/static/assets/js/jquery.min.js"></script>
+
+
+{#!--echarts.js在线引入--#}
+{# !-- 在网页搜索 echarts.js在线引入 然后把链接复制，把下面的源代码的<script>注释掉 并替换为 刚刚复制过来的链接 并粘贴--#}
+{#    <script src="/static/assets/js/echarts.js"></script>#}
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+
+
+    <script src="/static/assets/plugins/simplebar/js/simplebar.min.js"></script>
+    <script src="/static/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+    <script src="/static/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <script src="/static/assets/plugins/apexcharts-bundle/js/apexcharts.min.js"></script>
+    {#	<script src="/static/assets/js/entirety_chart.js"></script>#}
+    <!--app JS-->
+    <script src="/static/assets/js/app.js"></script>
+
+
+    <!--使用 echarts 库 初始化了四个图表-->
+    <!--每个图表的配置项 option 中定义了图表的类型type、数据data、颜色color、提示信息tooltip等-->
+    <!--使用 myChart.setOption(option) 将配置项应用到对应的图表容器div容器上，完成图表的渲染-->
+    <script>
+
+        //商品品牌分布,使用树图展示不同品牌的商品数量
+        var myChart = echarts.init(document.getElementById('e-chart1'));
+        var option1 =
+            {
+
+            legend: {show: true, orient: "horizontal", left: "center"},
+            tooltip: {trigger: "item", axisPointer: {type: "shadow"}},
+            color: ["#17a00e", "#CF2D25FF", "#ff9000", "#bfef45", "#1EE8FF", "#6495ed", "#36a2eb", "", "#00ffff", "#00008b", "#008b8b"], // 示例颜色数组，您可以根据需要添加更多颜色
+            series: [{
+                radius: ["20%", "70%"],
+                data: [
+                    {name: "荣耀（HONOR）", value: 270},
+                    {name: "华为（HUAWEI）", value: 261},
+                    {name: "小米（MI）", value: 235},
+                    {name: "vivo", value: 201},
+                    {name: "真我（realme）", value: 119},
+                    {name: "OPPO", value: 90},
+                ],
+                type: "treemap",
+                roseType: "radius",
+                label: {show: true},
+                labelLine: {show: true}
+            }],
+            {#toolbox: {feature: {dataView: {readOnly: false}, restore: {}, saveAsImage: {}}},#}
+
+            }
+        myChart.setOption(option1);
+
+
+
+        //店铺商品数量,使用柱状图展示不同店铺的商品数量
+        var myChart2 = echarts.init(document.getElementById('e-chart2'));
+        var option2 =
+            {
+
+            legend: {show: true, orient: "horizontal", left: "center"},
+            {#tooltip: {trigger: "axis", axisPointer: {type: "shadow"}},#}
+            tooltip: {trigger: "item", axisPointer: {type: "shadow"}},
+            {#color: ["#17a00e", "#CF2D25FF", "#ff9000", "#bfef45"],#}
+            series: [{
+                {#id: 1724292880094,#}
+                data: [
+                    {name: "华为京东自营旗舰店", value: 123},
+                    {name: "realme京东自营旗舰店", value: 221},
+                    {name: "小米京东自营旗舰店", value: 423},
+                    {name: "vivo京东自营官方旗舰店", value: 62},
+                ],
+                type: "bar",
+                showBackground: false,
+                {#itemStyle: {color: "#f52f25",},#}
+                itemStyle: {color: "#35A0F2FF",},
+                label: {show: false},
+                labelLine: {show: true}
+            }],
+            xAxis: {
+                type: "category",
+                data: ["华为京东旗舰店", "realme京东旗舰店", "小米京东自营旗舰店", "vivo京东自营旗舰店"]
+            },
+            yAxis: {type: "value"},
+
+            }
+        // 使用配置项和数据显示图表
+        myChart2.setOption(option2);
+
+
+
+        //价格区间统计,使用饼图展示不同价格区间的商品分布
+        var myChart3 = echarts.init(document.getElementById('e-chart3'));
+        var option3 =
+            {
+
+            legend: {show: true, orient: "horizontal", left: "center"},
+            tooltip: {trigger: "item", axisPointer: {type: "shadow"}},
+            color: ["#17a00e", "#ad35f2", "#ff9000", "#bfef45", "#36a2eb", "#ff7f50", "#6495ed", "#fff8dc", "#dc143c", "#00ffff", "#00008b", "#008b8b"], // 示例颜色数组，您可以根据需要添加更多颜色
+            series: [{
+                radius: ["20%", "70%"],
+                data: [
+                    {name: "0-1000", value: 247},
+                    {name: "1000-2000", value: 309},
+                    {name: "2000-3000", value: 435},
+                    {name: "3000-4000", value: 88},
+                    {name: "4000+", value: 195},
+                ],
+                type: "pie",
+                roseType: "radius",
+                label: {show: true},
+                labelLine: {show: true}
+            }],
+            {#toolbox: {feature: {dataView: {readOnly: false}, restore: {}, saveAsImage: {}}},#}
+
+            }
+        myChart3.setOption(option3);
+
+
+
+        //销量区间统计（总评数）,使用柱状图展示不同销量区间的商品数量
+        var myChart4 = echarts.init(document.getElementById('e-chart4'));
+        var option4 =
+            {
+
+            legend: {show: true, orient: "vertical", left: "center"},
+            tooltip: {trigger: "axis", axisPointer: {type: "shadow"}},
+            series: [{
+                id: 1724292880094,
+                data: [
+                    {name: "0-100", value: 534},
+                    {name: "100-500", value: 279},
+                    {name: "500-1000", value: 108},
+                    {name: "1000+", value: 255},
+                ],
+                type: "bar",
+                showBackground: false,
+                {#itemStyle: {color: "#e4b61d",},#}
+                itemStyle: {color: "#A2E41DFF",},
+                label: {show: true},
+                labelLine: {show: true}
+            }],
+            xAxis: {type: "category", data: ['0-100', '100-500', '500-1000', '1000+']},
+            yAxis: {type: "value"},
+
+            }
+        // 使用配置项和数据显示图表
+        myChart4.setOption(option4);
+
+    </script>
+
+{% endblock %}
+
+

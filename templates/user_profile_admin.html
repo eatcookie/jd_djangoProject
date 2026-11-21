@@ -1,0 +1,150 @@
+<!-- 继承base首页页面 -->
+<!-- 这行代码表示当前页面继承了 base.html 模板。base.html 是一个基础模板，
+通常包含网站的通用结构（如头部、尾部等），而当前页面会在其基础上添加或修改特定的内容。-->
+{% extends 'base.html' %}*/
+
+
+<!--新添的content主体内容块 -->
+<!--这里定义了一个名为 content 的内容块。在 base.html 模板中，
+会有一个对应的 % block content % 区域，当前页面的内容会替换掉 base.html 中的该区域内容。-->
+{% block content %}
+
+<!--这里定义了一个CSS类的 ellipsis 的样式类，用于处理文本溢出时的显示效果。
+    当文本长度，超过容器宽度时，会显示省略号。-->
+    <style>
+        .ellipsis {
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 溢出隐藏 */
+            text-overflow: ellipsis; /* 用省略号表示溢出部分 */
+            max-width: 200px; /* 设置最大宽度，根据需要调整 */
+        }
+    </style>
+
+
+
+    <!--页面主要内容区域，个人信息wrapper -->
+    <!--这部分定义了页面的主要内容区域，放置页面的核心内容，包括一个面包屑导航栏（显示当前页面的位置）和一个标题。-->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--面包屑导航栏，个人信息栏，显示标题和导航链接-->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="breadcrumb-title pe-3">个人信息</div>
+                <div class="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">个人信息管理</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 行容器，个人信息的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">个人信息管理</h6>
+            <hr>
+
+
+            <!--end breadcrumb-->
+            <div class="container">
+                <div class="main-body">
+                    <div class="row">
+
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <hr class="my-4" />
+                                    <div class="d-flex flex-column align-items-center text-center">
+                                        <img src="/static/assets/images/avatars/avatar-2.png" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                        <div class="mt-3">
+                                            <h4>测试用户1</h4>
+                                            <p class="text-secondary mb-1">普通用户</p>
+                                            <button type="submit" class="btn btn-primary">切换头像</button>
+                                            <a href="{% url 'logout' %}" class="btn btn-outline-primary"><i class="bx bx-log-out"></i> 退出登录</a>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4" />
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <form class="row g-3" method="post" action="{% url 'user_profile_admin' %}">
+                                        {% csrf_token %}
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3"><h6>昵称</h6></div>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="nickname" value="{{ user.nickname|default:''|escape }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3"><h6>邮箱</h6></div>
+                                            <div class="col-sm-9">
+                                                <input type="email" class="form-control" name="email" value="{{ user.email|default:''|escape }}">
+{#                                                <input type="email" class="form-control" name="email" value="{{ user.email|default:'' }}" required>#}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3"><h6>手机</h6></div>
+                                            <div class="col-sm-9">
+                                                <input type="tel" pattern="[0-9]{11}" maxlength="11" class="form-control" name="phone" value="{{ user.phone|default:''|escape }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3"><h6>登录账号</h6></div>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="username" value="{{ user.username|default:'' |escape}}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-3"><h6>地址</h6></div>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" name="address" value="{{ user.address|default:'' |escape}}">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-9">
+                                                <button type="submit" class="btn btn-primary px-4">
+                                                    <i class="bx bx-user"></i>保存修改
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end page wrapper -->
+
+
+
+{% endblock %}

@@ -1,0 +1,506 @@
+<!-- 继承base首页页面 -->
+<!-- 这行代码表示当前页面继承了 base.html 模板。base.html 是一个基础模板，
+通常包含网站的通用结构（如头部、尾部等），而当前页面会在其基础上添加或修改特定的内容。-->
+{% extends 'base.html' %}
+
+
+<!--新添的content主体内容块 -->
+<!--这里定义了一个名为 content 的内容块。在 base.html 模板中，
+会有一个对应的 % block content % 区域，当前页面的内容会替换掉 base.html 中的该区域内容。-->
+{% block content %}
+
+<!--这里定义了一个名为 ellipsis 的样式类，用于处理文本溢出时的显示效果。
+当文本长度超过容器宽度时，会显示省略号。-->
+    <style>
+        .ellipsis {
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 溢出隐藏 */
+            text-overflow: ellipsis; /* 用省略号表示溢出部分 */
+            max-width: 200px; /* 设置最大宽度，根据需要调整 */
+        }
+    </style>
+
+
+    <!--这部分定义了页面的主要内容区域，包括一个面包屑导航栏（显示当前页面的位置）和一个标题。-->
+    <!--评论分析wrapper -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--评论分析栏，显示标题和导航链接-->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="breadcrumb-title pe-3">数据评论分析</div>
+                <div class="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">评论分析图表</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 行容器，评论分析的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">评论分析图表</h6>
+            <hr/>
+
+
+
+
+
+
+            <!--这里定义了，一个大行，大行分为3个卡片，即这行会占位3个卡片，包括两个有卡片，一个无卡片-->
+            <div class="row row-cols-1 row-cols-lg-3">
+
+
+                <!--评论时间分布 e-chart1 折线图-->
+                <!--这里定义了一个卡片，包含一个标题，一个段落，一个图表容器（<canvas> 元素）。
+                <canvas> 元素用于绘制图表，图表的具体内容将通过 JavaScript 动态生成。-->
+                <div class="col d-flex">
+                    <div class="card radius-10 w-100">
+                        <div class="card-header bg-transparent">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">评论时间分布</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <p class="font-weight-bold mb-1 text-secondary">
+                                近六个月数据<br>
+                                数据
+                                从五月到十月<br>
+                                <br>
+                                <br>
+                                Data from May to October
+                            </p>
+
+                            <div class="chart-container-0">
+                                <canvas id="e-chart1"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!--评论情感分布 e-chart2 饼图-->
+                <!--这里定义了一个卡片，包含一个标题，一个图表容器（<canvas> 元素），一个无序列表。
+                <canvas> 元素用于绘制图表，图表的具体内容将通过 JavaScript 动态生成。-->
+                <div class="col d-flex">
+                    <div class="card radius-10 w-100">
+                        <div class="card-header bg-transparent">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">评论情感分布</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="chart-container-1">
+                                <canvas id="e-chart2"></canvas>
+                            </div>
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                    积极 <span class="badge bg-gradient-ibiza rounded-pill">7545</span>
+                                </li>
+                                <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                    中性 <span class="badge bg-gradient-quepal rounded-pill">2207</span>
+                                </li>
+                                <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                    消极 <span class="badge bg-gradient-deepblue rounded-pill">965</span>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--这里定义了，一个大行，大行分为2个卡片，即这行会占位2个卡片，包括一个有卡片，一个无卡片-->
+            <div class="row row-cols-1 row-cols-lg-2">
+                <!--不同品牌手机评论情感对比 e-chart3 柱状图-->
+                <!--这里定义了一个卡片，包含一个标题，一个图表容器（<canvas> 元素）。
+                <canvas> 元素用于绘制图表，图表的具体内容将通过 JavaScript 动态生成。-->
+                <div class="col d-flex">
+                    <div class="card radius-10 w-100">
+                        <div class="card-header bg-transparent">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">不同品牌手机评论情感对比</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="chart-container-0">
+                                <canvas id="e-chart3"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <!--这里定义了，一个大行，大行分为1个大卡片，即这行会占位1个大卡片，
+            1个大卡片里面分为两个小卡片部分，包括一个词云图卡片，一个有(div定义数据)卡片-->
+            <div class="row row-cols-1 row-cols-lg-1">
+{#            <div class="row">#}
+
+                <!--词云图 geographic-map-2 -->
+                <!--这里定义了一个大卡片，包含：一个小卡片页眉（一个标题，一个下拉栏，一个无序列表），一个小卡片，
+                其中的小卡片部分是一个图表容器（<div> 元素），提供视觉上的隔离和组织，div容器作为图表容器，
+                只能使用特定的这个id="geographic-map-2或geographic-map-3"才能方便后续通过JavaScript进行初始化，而改为其他id无法初始化。
+                后面是六个块级容器，通过内联容器分组和样式化-->
+                <div class="col-12 col-lg-7 col-xl-12 d-flex">
+                    <div class="card radius-10 w-100">
+
+                        <div class="card-header bg-transparent">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">词云图</h6>
+                                </div>
+
+                                <div class="dropdown ms-auto">
+                                    <a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+                                       data-bs-toggle="dropdown"><i
+                                            class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="javascript:;">Action</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-lg-7 col-xl-8 border-end">
+                                    <div id="geographic-map-3"></div>
+                                </div>
+
+
+                                <div class="col-lg-5 col-xl-4">
+
+                                    <div class="mb-4">
+                                        <p class="mb-2"> 外观 <span class="float-end">70%</span></p>
+                                        <div class="progress" style="height: 7px;">
+                                            <div class="progress-bar bg-primary progress-bar-striped" role="progressbar"
+                                                 style="width: 70%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <p class="mb-2">运行速度 <span class="float-end">65%</span></p>
+                                        <div class="progress" style="height: 7px;">
+                                            <div class="progress-bar bg-danger progress-bar-striped" role="progressbar"
+                                                 style="width: 65%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <p class="mb-2">屏幕 <span class="float-end">60%</span></p>
+                                        <div class="progress" style="height: 7px;">
+                                            <div class="progress-bar bg-success progress-bar-striped" role="progressbar"
+                                                 style="width: 60%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <p class="mb-2">续航<span class="float-end">55%</span></p>
+                                        <div class="progress" style="height: 7px;">
+                                            <div class="progress-bar bg-warning progress-bar-striped" role="progressbar"
+                                                 style="width: 55%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <p class="mb-2">快递 <span class="float-end">50%</span></p>
+                                        <div class="progress" style="height: 7px;">
+                                            <div class="progress-bar bg-info progress-bar-striped" role="progressbar"
+                                                 style="width: 50%"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-0">
+                                        <p class="mb-2">服务 <span class="float-end">45%</span></p>
+                                        <div class="progress" style="height: 7px;">
+                                            <div class="progress-bar bg-secondary progress-bar-striped" role="progressbar"
+                                                 style="width: 45%"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+
+
+    <!--引入Chart.js-->
+    <!--这两行代码引入了 Chart.js 库及其扩展，用于绘制图表。-->
+    {% block jss %}
+        <script src="/static/assets/plugins/chartjs/js/Chart.min.js"></script>
+        <script src="/static/assets/plugins/chartjs/js/Chart.extension.js"></script>
+
+
+        <script>
+
+
+            // e-chart1 折线图 评论时间分布
+                //这段代码使用 Chart.js 绘制了一个折线图。
+                //document.getElementById('e-chart1').getContext('2d') 获取了 <canvas> 元素的绘图上下文(即div容器)。
+                //createLinearGradient 创建了一个线性渐变效果(声明图表渐变颜色)。
+                //new Chart(ctx, {...}) 创建了一个新的图表实例(声明图表配置)，并配置了图表的类型、数据和选项。
+            var ctx = document.getElementById('e-chart1').getContext('2d');
+
+            var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientStroke1.addColorStop(0, '#008cff');
+            gradientStroke1.addColorStop(1, 'rgba(22, 195, 233, 0.1)');
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['五月', '六月', '七月', '八月', '九月','十月'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [15 ,3, 30, 10, 10, 22, 12, 5],
+                        pointBorderWidth: 2,
+                        pointHoverBackgroundColor: gradientStroke1,
+                        backgroundColor: gradientStroke1,
+                        borderColor: gradientStroke1,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        position: 'bottom',
+                        display: false
+                    },
+                    tooltips: {
+                        displayColors: false,
+                        mode: 'nearest',
+                        intersect: false,
+                        position: 'nearest',
+                        xPadding: 10,
+                        yPadding: 10,
+                        caretPadding: 10
+                    }
+                }
+            });
+
+
+            // e-chart2 饼图 评论情感分布
+                //这段代码使用 Chart.js 绘制了一个饼图。
+                //document.getElementById('e-chart2').getContext('2d') 获取了 <canvas> 元素的绘图上下文(即div容器)。
+                //createLinearGradient 创建了一个线性渐变效果(声明图表渐变颜色)。
+                //new Chart(ctx, {...}) 创建了一个新的图表实例(声明图表配置)，并配置了图表的类型、数据和选项。
+            var ctx = document.getElementById("e-chart2").getContext('2d');
+
+            var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientStroke1.addColorStop(0, '#ee0979');
+            gradientStroke1.addColorStop(1, '#ff6a00');
+
+            var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientStroke2.addColorStop(0, '#283c86');
+            gradientStroke2.addColorStop(1, '#39bd3c');
+
+            var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientStroke3.addColorStop(0, '#7f00ff');
+            gradientStroke3.addColorStop(1, '#e100ff');
+
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["积极", "中性", "消极"],
+                    datasets: [{
+                        backgroundColor: [
+                            gradientStroke1,
+                            gradientStroke2,
+                            gradientStroke3
+                        ],
+
+                        hoverBackgroundColor: [
+                            gradientStroke1,
+                            gradientStroke2,
+                            gradientStroke3
+                        ],
+
+                        data: [7545, 2207, 965],
+                        borderWidth: [1, 1, 1]
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    cutoutPercentage: 0,
+                    legend: {
+                        position: 'bottom',
+                        display: false,
+                        labels: {
+                            boxWidth: 8
+                        }
+                    },
+                    tooltips: {
+                        displayColors: false,
+                    },
+                }
+            });
+
+
+            // e-chart3 柱状图 不同品牌手机评论情感对比
+                //这段代码使用 Chart.js 绘制了一个折线图。
+                //document.getElementById('e-chart3').getContext('2d') 获取了 <canvas> 元素的绘图上下文(即div容器)。
+                //createLinearGradient 创建了一个线性渐变效果(声明图表渐变颜色)。
+                //new Chart(ctx, {...}) 创建了一个新的图表实例(声明图表配置)，并配置了图表的类型、数据和选项。
+            var ctx = document.getElementById("e-chart3").getContext('2d');
+
+            var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientStroke1.addColorStop(0, '#f54ea2');
+            gradientStroke1.addColorStop(1, '#ff7676');
+
+            var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientStroke2.addColorStop(0, '#42e695');
+            gradientStroke2.addColorStop(1, '#3bb2b8');
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['荣耀', '华为', '小米', 'vivo', '真我', 'OPPO'],
+                    datasets: [{
+                        label: '积极',
+                        data: [140, 130, 160, 135, 160, 125],
+                        borderColor: gradientStroke1,
+                        backgroundColor: gradientStroke1,
+                        hoverBackgroundColor: gradientStroke1,
+                        pointRadius: 0,
+                        fill: false,
+                        borderWidth: 1
+                    }, {
+                        label: '消极',
+                        data: [50, 40, 40, 38, 35, 55],
+                        borderColor: gradientStroke2,
+                        backgroundColor: gradientStroke2,
+                        hoverBackgroundColor: gradientStroke2,
+                        pointRadius: 0,
+                        fill: false,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        position: 'bottom',
+                        display: true,
+                        labels: {
+                            boxWidth: 8
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            barPercentage: .5
+                        }]
+                    },
+                    tooltips: {
+                        displayColors: false,
+                    }
+                }
+            });
+        </script>
+
+
+        <!--这两行代码引入了 ECharts 库及其词云插件-->
+        <!--下面的注释掉的网址也是可以用的，可作为备用，即两个都能用，一个是在线的(已注释的)，一个是本地的(正在用的)-->
+{#        <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>#}
+        <script src="/static/assets/js/echarts.min.js"></script>
+
+
+
+
+        <!--下面的注释掉的网址也是可以用的，可作为备用，即三个都能用，两个都是在线的(已注释)，一个是本地的(正在用的)-->
+{#        <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>#}
+{#        <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud/dist/echarts-wordcloud.min.js"></script>#}
+
+        <script src="/static/assets/js/echarts-wordcloud.min.js"></script>
+
+        <script>
+            // 如果id是其他的例如e-wordcloud-chart词云图会无法显示，而只有id是geographic-map-2或geographic-map-3词云图才能正常显示
+            // 使用返回的数据更新 ECharts 图表
+            // geographic-map-2 词云图
+                //这段代码使用 ECharts 绘制了一个词云图。(注意：这里不是Chart.js库，而是ECharts库)
+                //echarts.init(document.getElementById('geographic-map-2')) 声明初始化了一个 ECharts 图表实例。
+                //option 是声明图表的配置项，包括提示框、系列类型、形状、网格尺寸、大小范围、旋转范围、文本样式等。
+                //data: { {result|safe} } 是动态数据，从后端传递到前端的变量 result，|safe 表示将变量内容作为 HTML 安全内容渲染。
+            var myChart = echarts.init(document.getElementById('geographic-map-3'));
+
+            var option = {
+                tooltip: {
+                    show: true,  // 显示提示框
+                    trigger: 'item',  // 触发类型，'item' 表示鼠标悬停在数据项上时触发
+                },
+                series: [{
+                    type: 'wordCloud',  //类型为字符云
+                    shape: 'ellipse',  //平滑 椭圆:ellipse 圆形:circle
+                    gridSize: 1,    //文字的最小网格尺寸
+                    size: ['1000%', '200%'], //文字宽度范围
+                    sizeRange: [12, 130], //文字数量范围
+                    rotationRange: [-20, 45], //旋转范围
+                    textStyle: {
+                        // 将 "normal" 改为 "font"
+                        fontFamily: 'sans-serif',
+
+                        // 对应的字体和阴影设置
+                        emphasis: {
+                            focus: 'self',  // 仅在悬停的元素上应用强调
+                            textStyle: {
+                                fontSize: function (value) {
+                                    return value * 1.2;  // 放大效果
+                                },
+                                fontWeight: 'bold',
+                                shadowBlur: 100,
+                                shadowColor: '#333',
+                            }
+                        },
+                    },
+                    data: {{result|safe}},
+                }]
+            }
+
+            // 使用配置项和数据显示图表
+            myChart.setOption(option);
+            //强制重新渲染图表
+            {#myChart.resize();#}
+        </script>
+
+    {% endblock %}
+{% endblock %}
+

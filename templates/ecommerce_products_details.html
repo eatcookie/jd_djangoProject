@@ -1,0 +1,313 @@
+<!-- 继承base首页页面 -->
+{% extends 'base.html' %}
+
+
+<!--新添的content主体内容块 -->
+{% block content %}
+
+    <style>
+        .ellipsis {
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 溢出隐藏 */
+            text-overflow: ellipsis; /* 用省略号表示溢出部分 */
+            max-width: 200px; /* 设置文本最大宽度，根据需要调整 */
+        }
+    </style>
+
+    <!--商品详情wrapper -->
+    <!--页面封装器 -->
+    <div class="page-wrapper">
+        <!--页面内容 -->
+        <div class="page-content">
+
+            <!--显示文字商品详情 javascript:;导航链接 显示文字商品详情-->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="breadcrumb-title pe-3">商品详情</div>
+                <div class="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a href="javascript:;"><i class="bx bx-home-alt"></i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                商品数据详情</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!--end breadcrumb-->
+
+            <!-- 行容器，商品详情的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">商品数据详情</h6>
+            <hr/>
+
+
+            <!--商品卡片-->
+            <div class="card">
+
+                <!--商品卡片 第一行-->
+                <div class="row g-0">
+
+                    <!--商品图片 商品图片缩略图-->
+                    <div class="col-md-4 border-end">
+                        <img src="{{ product.img_url }}"
+                             style="width: 400px; height: 400px;"
+                             class="img-fluid"
+                             alt="...">
+
+                        <div class="row mb-3 row-cols-auto g-2 justify-content-center mt-3">
+                            <div class="col">
+                                <img src="{{ product.img_url }}"
+                                     width="70"
+                                     class="border rounded cursor-pointer"
+                                     alt="">
+                            </div>
+
+                            <div class="col">
+                                <img src="{{ product.img_url }}"
+                                     width="70"
+                                     class="border rounded cursor-pointer"
+                                     alt="">
+                            </div>
+
+                            <div class="col">
+                                <img src="{{ product.img_url }}"
+                                     width="70"
+                                     class="border rounded cursor-pointer"
+                                     alt="">
+                            </div>
+
+                            <div class="col">
+                                <img src="{{ product.img_url }}"
+                                     width="70"
+                                     class="border rounded cursor-pointer"
+                                     alt="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--商品详情信息 星级评分和其他信息-->
+                    <div class="col-md-8">
+                        <div class="card-body">
+
+                            <h4 class="card-title">{{ product.product_name }}</h4>
+
+                            <div class="d-flex gap-3 py-3">
+                                <div class="cursor-pointer">
+                                    {% for star in product.full_stars %}
+                                        <i class="bi {{ star }}"></i>
+                                    {% endfor %}
+                                    {% for star in product.empty_stars %}
+                                        <i class="bi {{ star }}"></i>
+                                    {% endfor %}
+                                </div>
+
+                                <div>{{ product.CommentCountStr }}
+                                    购买</div>
+
+                                <div class="text-success">
+                                    <i class='bx bxs-cart-alt align-middle'></i>
+                                    {{ product.GoodCountStr }} 好评
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="price h4">
+                                    {{ product.price }}元</span>
+                                <span class="text-muted">
+                                    /个</span>
+                            </div>
+
+                            <p class="card-text fs-6">{{ product.product_name }}</p>
+
+                            <dl class="row">
+                                <dt class="col-sm-3">
+                                    店铺</dt>
+                                <dd class="col-sm-9">
+                                    {{ product.shop }}</dd>
+
+                                <dt class="col-sm-3">
+                                    品牌</dt>
+                                <dd class="col-sm-9">
+                                    {{ product.brand }}</dd>
+
+                                <dt class="col-sm-3">平均分</dt>
+                                <dd class="col-sm-9">{{ product.AverageScore }}</dd>
+                            </dl>
+
+                            <!--水平分割线-->
+                            <hr>
+
+                            <div class="row row-cols-auto row-cols-1 row-cols-md-3 align-items-center">
+                            </div>
+
+                            <div class="d-flex gap-3 mt-3">
+                                <a target="_blank"
+                                   href="https://item.jd.com/{{ product.product_id }}.html"
+                                   class="btn btn-primary">
+                                    去购买
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--水平分割线-->
+                <hr/>
+
+                <!--商品卡片 第二行-->
+                <div class="card-body">
+
+                    <ul class="nav nav-tabs nav-primary mb-0" role="tablist">
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active"
+                               data-bs-toggle="tab"
+                               href="#primaryhome"
+                               role="tab"
+                               aria-selected="true">
+
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                        <i class='bx bx-comment-detail font-18 me-1'></i>
+                                    </div>
+                                    <div class="tab-title">
+                                        商品评论数据
+                                    </div>
+                                </div>
+
+                            </a>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link"
+                               data-bs-toggle="tab"
+                               href="#primarycontact"
+                               role="tab"
+                               aria-selected="false">
+
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                        <i class='bx bx-star font-18 me-1'></i>
+                                    </div>
+                                    <div class="tab-title">
+                                        商品精选评论
+                                    </div>
+                                </div>
+
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    <div class="tab-content pt-3">
+
+                        <div class="tab-pane fade show active" id="primaryhome" role="tabpanel">
+                            <p>总评论：{{ product.CommentCountStr }}</p>
+                            <p>好评数：{{ product.GoodCountStr }}</p>
+                            <p>默认好评：{{ product.DefaultGoodCountStr }}</p>
+                            <p>好评率：{{ product.GoodRate }}</p>
+                            <p>追评数：{{ product.AfterCountStr }}</p>
+                            <p>视频晒单数：{{ product.VideoCountStr }}</p>
+                            <p>差评数：{{ product.PoorCountStr }}</p>
+                            <p>中评数：{{ product.GeneralCountStr }}</p>
+                        </div>
+
+
+                        <!-- 商品精选评论 -->
+                        <div class="tab-pane fade"
+                             id="primarycontact"
+                             role="tabpanel">
+
+                            <p>评论数量：{{ comments|length }}</p>
+
+                            <ul>
+                                {% for comment in comments %}
+                                    <li>
+                                        <p>{{ comment.comment }}</p>
+                                        <small>
+                                            评论于{{ comment.comment_date }}
+                                        </small>
+                                    </li>
+                                {% empty %}
+                                    <li>No comments yet.</li>
+                                {% endfor %}
+                            </ul>
+                            <pre>调试信息：comments = {{ comments }}</pre>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <h6 class="text-uppercase mb-0">
+                店铺商品推荐
+            </h6>
+
+            <!--水平分割线-->
+            <hr/>
+
+            <!--其他商品的标签页-->
+            <div class="row row-cols-1 row-cols-lg-3">
+                {% for other_product in other_products %}
+
+                    <div class="col">
+                        <a href="/ecommerce_products_details?id={{ other_product.id }}">
+
+                            <div class="card">
+                                <div class="row g-0">
+
+{#                                    <div class="col-md-4">#}
+{#                                        <img src="{{ other_product.img_url }}" class="img-fluid" alt="...">#}
+{#                                    </div>#}
+
+                                    <div class="col-md-4">
+                                        <img src="{{ other_product.img_url }}" class="img-fluid" alt="{{ other_product.product_name }}">
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ other_product.product_name }}</h6>
+                                            <div class="cursor-pointer my-2">
+                                                {% for star in other_product.full_stars %}
+                                                    <i class="bi {{ star }}"></i>
+                                                {% endfor %}
+                                                {% for star in other_product.empty_stars %}
+                                                    <i class="bi {{ star }}"></i>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="clearfix">
+                                                <p class="mb-0 float-start fw-bold">
+                                                    <span>¥{{ other_product.price }}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </a>
+                    </div>
+
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+    <!--end page wrapper -->
+
+
+{% endblock %}
+
+
+
+
+
+

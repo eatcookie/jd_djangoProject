@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Django
+debug.log
+*.log
+db.sqlite3
+staticfiles/
+
+# 环境与敏感配置
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+
+# Node
+node_modules/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+

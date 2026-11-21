@@ -1,0 +1,395 @@
+<!--
+learn学习，关于图库，echarts和ApexCharts 两者图库，都分别有两种的使用方式，即 e的使用1和使用2，a的使用1和使用2。
+    这里下面的，a的使用1和使用2，解释的ApexCharts是使用1和ApexCharts的使用2，该html的内容是a的使用2，而a的使用1可以参考entirety_chart.html。
+    ApexCharts使用1：一个是html的 前端html的dom和js图的var options，两者分开，图ApexCharts使用本地文件(即自己写js)，例如参考relativity_chart.html。
+    ApexCharts使用2：另一个是这个全部写在 前端html的dom和js图的const options，两者合并,图ApexCharts使用的是在线链接(即cdnjs)，例如参考ApexCharts_learn_demo,html
+-->
+
+
+
+
+<!-- 继承自base.html模版 首页页面 -->
+{% extends 'base.html' %}
+
+
+<!--新添的content主体内容块 -->
+<!-- 定义 content 块，用于展示页面主体内容 -->
+{% block content %}
+        <!-- 定义ellipsis样式，用于文本溢出时的显示效果 文本溢出显示省略号 -->
+        <style>
+        .ellipsis {
+            white-space: nowrap; /* 防止文本换行 */
+            overflow: hidden; /* 溢出隐藏的文本 */
+            text-overflow: ellipsis; /* 溢出部分显示省略号 */
+            max-width: 200px; /* 设置文本最大宽度，根据需要调整 */
+        }
+    </style>
+
+
+    <!--ApexCharts的wrapper容器 -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--ApexCharts栏，标题和导航链接-->
+            <!-- 面包屑，显示当前页面的位置 -->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <!-- 面包屑标题 -->
+                <div class="breadcrumb-title pe-3">ApexCharts</div>
+                <div class="ps-3">
+                    <!-- 面包屑导航链接 -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">数据图表ApexCharts-整体分析图表(learn_demo)</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!--end of breadcrumb-->
+
+            <!-- 行容器，ApexCharts的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">数据图表ApexCharts-整体分析图表(learn_demo)</h6>
+            <hr>
+
+            <!-- 图表容器，class控制宽度，使用 Bootstrap 的 grid 系统控制布局 -->
+            <!--如果class="row row-cols-md-auto"是五分之一的全屏宽度,如果class="row-cols-md-auto"是全幕宽度-->
+            <div class="row-cols-md-auto">
+
+                <!-- 图表的card卡片 -->
+                <!--图表的 card 卡片，提供视觉上的隔离和组织，div容器作为图表容器，使用特定的id="a-chart-learn-demo"来方便后续通过JavaScript进行初始化-->
+                <div class="col">
+                    <div class="card radius-10 ">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-0">商品品牌分布</h5>
+                                </div>
+
+                                <!-- 下拉菜单，提供额外的操作选项 -->
+                                <div class="dropdown ms-auto">
+                                    <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer"
+                                         data-bs-toggle="dropdown"><i class='bx bx-dots-horizontal-rounded font-22'></i>
+                                    </div>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="javascript:;">Action</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 图表渲染区域，使用特定的 id 以便 JavaScript 初始化图表 -->
+                            <div id="a-chart-learn-demo" style="width: 100%; height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block jss %}
+    <!-- 在线链接引入ApexCharts库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.36.3/apexcharts.min.js"></script>
+
+    <script>
+        // 确保 DOM 完全加载后再执行图表初始化代码
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // 声明const不可变的变量，示例数据，展示不同手机的，品牌、销量、好评率
+            const brands = ['荣耀（HONOR）', '华为（HUAWEI）', '小米（MI）', 'vivo', '真我（realme）', 'OPPO']; //声明 X轴数据名字(注意：不是X轴名字)
+            const salesData = [440, 505, 714, 671, 227, 413];           //声明 Y轴数据值
+            const goodRateData = [0.93, 0.91, 0.98, 0.95, 0.93, 0.94];  //声明 Y轴数据值
+
+            // 图表配置对象，定义图表的各种属性和行为
+            const options = {
+
+                // 定义数据系列，包含销量和好评率两个数据集
+                series: [
+                    {
+                        name: '销量',     //定义 Y轴数据值的数据集名字 销量的数据集的名字，但，不是表上显示的轴的名字(也不是数据标签)
+                        type: 'column',     // 柱状图
+                        data: salesData     // Y轴数据值，在更新前的(数据值)，生效
+                    },
+                    {
+                        name: '好评率',    //定义 Y轴数据值的数据集名字 好评率的数据集的名字，但，不是表上显示的轴的名字(也不是数据标签)
+                        type: 'line',   // 折线图
+                        data: goodRateData  // Y轴数据值，在更新前的(数据值)，生效
+                    }
+                ],
+
+                // 图表基本配置
+                chart: {
+                    foreColor: '#933', // 图表内的文字颜色
+                    height: 500,
+                    type: 'line', // 主图表类型
+                    stacked: true, // 是否堆叠
+                    zoom: {
+                        enabled: true // 是否启用缩放
+                    },
+                    toolbar: {
+                        show: true, // 是否显示工具栏
+                        tools: {
+                            download: true, // 是否显示下载按钮
+                            selection: true, // 是否启用选择工具
+                            zoom: true, // 是否启用缩放工具
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true
+                        }
+                    }
+                },
+                // 颜色配置，定义图表的颜色主题
+                colors: ["#f41127", "#0d6efd"],
+
+                // 图表标题配置
+                title: {
+                    text: '手机品牌销量与好评率对比图',  //配置表上显示的标题
+                    align: 'left',
+                    style: {
+                        fontSize: '18px',
+                        fontWeight: 'bold'
+                    },
+                    offsetY: 15 // 标题垂直偏移量
+                },
+
+                // 数据标签配置，控制数据值的显示方式
+                dataLabels: {
+                    enabled: true, // 是否启用数据标签（配置 表上显示的数据值，例如0.93和690）
+                    enabledOnSeries: [0,1], // 0仅在销量系列上显示数据标签，1仅在好评率系列上显示数据标签，[0,1]销量和好评率都显示数据标签
+                    style: {
+                        fontSize: '12px',  //数据标签的文字大小
+                        fontWeight: 'bold' //数据标签的文字样式
+                    },
+                    formatter: function (val) {
+                        return val.toFixed(2);  // 格式化数据标签，保留两位小数
+                    }
+                },
+
+                stroke: {
+                    width:  [10,40] // 定义每个系列的线条宽度，第一个表示Y轴的销量123的数据线条宽度(柱子的宽度)，第二个表示Y轴的好评率的数据线条宽度(折线的宽度)
+                },
+                // 数据点标记配置
+                markers: {
+                    size: 8, // 标记大小
+                    colors: ["#0d6efd"], // 标记颜色
+                    strokeColors: "#fff", // 标记边框颜色
+                    strokeWidth: 10, // 标记边框宽度
+                    hover: {
+                        size: 18 // 鼠标悬停时标记大小
+                    }
+                },
+                // 网格线配置
+                grid: {
+                    show: true, // 是否显示网格线
+                    borderColor: '#ff9000', // 网格边框颜色
+                    padding: {
+                        left: 15,
+                        right: 15,
+                        top: 20,
+                        bottom: 20
+                    }
+                },
+
+                // 图例配置
+                legend: {
+                    position: 'top', // 图例位置top在上，bottom在下
+                    horizontalAlign: 'right', // 图例水平对齐方式
+                    markers: {
+                        width: 30, // 图例标记宽度
+                        height: 10 // 图例标记高度
+                    }
+                },
+                // X 轴配置
+                xaxis: {
+                    categories: brands, // X轴类别 X轴名字 X轴数据名字 配置表上显示的轴的(数据名字)
+                    title: {
+                        text: ['手机品牌','数据标签'] // X轴标题 配置表上显示的轴的(数据标签)
+                    },
+                    axisBorder: {
+                        show: true, // 是否显示轴边框
+                        color: '#0d6efd' // 轴边框颜色
+                    },
+                    axisTicks: {
+                        show: true, // 是否显示轴刻度
+                        color: '#f41127' // 轴刻度颜色
+                    },
+
+                },
+
+                // Y 轴配置，包含两个 Y 轴分别对应销量和好评率
+                yaxis: [
+                    {
+                        title: {
+                            text: '销量123' // Y轴标题 配置表上显示的轴的(数据标签)
+                        },
+
+                        min: 0, // 最小值  Y轴名字 Y轴数据名字
+                        max: 800, // 最大值   Y轴名字 Y轴数据名字
+                        opposite: false, // false是轴标题位置在（左侧）
+
+                        axisBorder: {
+                        show: true, // 是否显示轴边框
+                        color: '#0d6efd' // 轴边框颜色
+                        },
+
+                        axisTicks: {
+                        show: true, // 是否显示轴刻度
+                        color: '#f41127' // 轴刻度颜色
+                        },
+
+                    },
+
+                    {
+                        title: {
+                            text: '好评率' // Y轴标题 配置表上显示的轴的(数据标签)
+                        },
+
+                        min: 0.85, // 最小值   Y轴名字 Y轴数据名字
+                        max: 1.0, // 最大值    Y轴名字 Y轴数据名字
+                        opposite: true, // true是轴标题位置在（右侧）
+
+                        axisBorder: {
+                        show: true, // 是否显示轴边框
+                        color: '#17a00e' // 轴边框颜色
+                        },
+
+                        axisTicks: {
+                        show: true, // 是否显示轴刻度
+                        color: '#f41127' // 轴刻度颜色
+                        },
+
+                    },
+
+                ],
+
+                // 柱状图样式配置
+                plotOptions: {
+                    bar: {
+                        columnWidth: '30%', // 柱状图宽度比例
+                        endingShape: 'rounded', // 柱状图形状（圆角还是方角）
+                        horizontal: false, // 柱状图的柱子是否水平（true是横着的柱子，false是竖着的柱子）
+                        columnWidth: 15, // 柱状图宽度固定值
+                    }
+                },
+                // 阴影效果配置
+                dropShadow: {
+                    enabled: false, // 是否启用阴影
+                    top: 2,
+                    left: 3,
+                    {#right: 66,#}
+                    blur: 6,   //模糊
+                    opacity: 10000,   //不透明
+
+                fill:{
+                        opacity: 9000,
+                },
+
+                },
+                // 混合图表配置（柱状图和折线图） //注意：这里的配置和series重复了
+                mixChart: {
+                    type: 'mix', // 混合图表类型
+                    series: [
+                        {
+                            type: 'column', // 第一个系列为柱状图
+                            name: '销量222', // (数据标签)但是，这里的配置和series重复了，只生效series
+                            data: salesData // Y轴的，在更新前的(数据值)，但是这里不生效
+                        },
+                        {
+                            type: 'line', // 第二个系列为折线图
+                            name: '好评率333', // (数据标签)但是，这里的配置和series重复了，只生效series
+                            data: goodRateData, // Y轴的，在更新前的(数据值)，但是这里不生效
+                            yaxis: 1 // 指定使用第二个 Y 轴
+                        }
+                    ]
+                },
+                // 响应式配置，适配不同屏幕尺寸
+                responsive: [
+                    {
+                        breakpoint: 1000, // 当屏幕宽度小于 1000px 时
+                        options: {
+                            chart: {
+                                height: 450 // 调整,图表高度
+                            },
+                            legend: {
+                                position: 'bottom' // 调整,图例位置
+                            }
+                        }
+                    }
+                ],
+                // 鼠标悬停提示配置
+                tooltip: {
+                    enabled: true, // 是否启用提示
+                    shared: true, // 是否共享提示（显示多个系列数据）
+                    followCursor: true, // 提示是否跟随鼠标
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Arial'
+                    }
+                },
+                // 点击事件配置
+                chartEvents: {
+                    click: function (event, chartContext, config) {
+                        // 获取点击的元素信息
+                        const seriesIndex = config.seriesIndex;
+                        const dataPointIndex = config.dataPointIndex;
+
+                        // 输出点击信息
+                        console.log(`点击了系列 ${seriesIndex} 的第 ${dataPointIndex} 个数据点`);
+                    }
+                }
+            };
+
+            // 使用 ApexCharts 创建图表实例
+            const chart = new ApexCharts(
+                document.querySelector("#a-chart-learn-demo"),
+                options
+            );
+
+            // 渲染图表
+            chart.render();
+
+            // 模拟动态数据更新，2秒后更新销量数据，即由上面的Data的salesData和goodRateData的原数据，变更为新下面的newData和goodRateData新数据。
+            setTimeout(() => {
+                const newData = [480, 530, 750, 690, 850, 440];
+                const goodRateData = [0.97,0.97,0.95,0.93,0.91,0.99];
+                chart.updateSeries([
+                    { data: newData },  //Y轴数据值，在更新后的(数据值)
+                    { data: goodRateData }  //Y轴数据值，在更新后的(数据值)
+                ]);
+            }, 2000);
+
+            // 创建并添加一个按钮，用于实现数据切换
+            const button = document.createElement('button');
+            button.textContent = '切换数据';
+            button.style.position = 'absolute';
+            button.style.top = '10px';
+            button.style.right = '10px';
+            button.style.padding = '8px 16px';
+            button.style.backgroundColor = '#0d6efd';
+            button.style.color = 'greeen';
+            button.style.border = 'none';
+            button.style.borderRadius = '4px';
+            button.style.cursor = 'pointer';
+
+            button.addEventListener('click', function() {
+                const newData1 = [350, 450, 820, 710, 200, 380];
+                const newData2 = [0.95, 0.90, 0.97, 0.96, 0.94, 0.92];
+                chart.updateSeries([
+                    { data: newData1 },
+                    { data: newData2 }
+                ]);
+            });
+
+            document.body.appendChild(button);
+        });
+    </script>
+{% endblock %}

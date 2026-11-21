@@ -1,0 +1,661 @@
+# 本文档会简略介绍jd_djangoProject项目从创建到实现的全过程/全流程
+>（根据流程操作可以完全复现这个项目的实现，这里代码细节解释会忽略(例如部分简单的import这里省略不写了，代码逻辑的注释也省略了)，代码的细节解释需要直接看原代码隔壁的注释内容）
+
+
+全流程总结：
+    >项目配置，mysql数据库，创建目录和文件，
+    >用户表模型类models，url，（登录页面，注册页面，登出函数，base首页，index主页）视图函数和html页面，
+    >商品信息表模型类models，爬ip爬虫，url，（商品列表，商品详情页）视图函数和html页面，
+    >商品评论表模型类models，url（评论列表）视图函数和html页面，
+    >浏览器下载配置库包，url，可视化图表（整体分析，相关性分析，评论分析）视图函数和html页面，
+    >安装机器学习库包，url，机器学习模型，机器学习函数，（销售数据预测）视图函数和html页面，
+    >url，（apexcharts的demo）视图函数和html页面，
+    >(继承用户表后的)抽象用户表模型类url，（个人信息，修改密码，403）视图函数和html页面，
+    >Article表模型类models，url，Django后台分组用户权限（Article）视图函数和html页面。
+
+
+//项目流程
+
+
+1.
+新建项目>Django
+>设置位置创建一个空目录并命名>项目文件路径D:\work\code\Jd\jd_djangoProject
+>工具虚拟环境
+>基础解释器
+>创建>它会自动安装虚拟环境和包
+>看到了jd_djangoProject目录文件，里面包括jd_djangoProject、vnev、外部库、临时文件和控制台
+>看到了基本目录
+显示jd_djangoProject目录，里面包括__init__.py等后端文件
+显示templates前端目录
+显示vnev的library根目录
+>看到右下角python解释器有项目新建项目的名字
+>打开终端能看到vnev代表虚拟环境被激活了
+
+
+2.
+配置setting模型类 + 配置jd_djangoProject项目路由
+配置setting.py模型类
+>工具>运行manage.py任务>
+>startapp myapp（该操作后，IDE会自动在目录创建myapp.py）
+>手动在在setting的应用与中间件INSTALLED_APPS部分，写上"myapp"（这样我们的app类就注册完成了）
+>复制jd_djangoProject的urls.py到myapp
+>复制jd_djangoProject的urls.py的路径from django.urls import path到myapp的urls.py
+
+>在setting.py，注释掉原来的默认数据库sqlite3，重新写这里需要的数据mysql
+>打开sqlyog，在root@loaclhost创建数据库，数据库名字是django_jd_ksh，其他默认
+>项目配置基本结束
+
+配置jd_djangoProject\urls.py路由
+>from django.contrib import admin
+>from django.urls import include,path
+>
+urlpatterns = [
+    path("admin/", admin.site.urls),     （这里是 Django 管理后台）
+    path('',include('myapp.urls')),      （这里是 `myapp/urls.py` 中定义的路由）
+]
+
+
+3.
+>在myapp目录，创建spiders的目录（用来存放爬虫文件）
+>在myapp目录，根据setting的STATIC_URL部分的"static/"，创建static的目录（用来存放静态文件）
+>系统基础框架，构建好了，接下来开始搭建系统的基础页面，包括布置后端和前端
+
+>提前准备，前端部分，由moban5539文件的模板文件修改，里面是一个名叫Rocker的前端模板网站
+
+4.
+>搭建的页面，登录注册，即用户表
+>我们通过models模型类来操作数据库
+>在myapp目录的migrations目录的models.py
+>写，自定义的class User(models.model):模型类
+>但是，我改为了，写Django认证系统的class User(AbstractUser):模型类
+>完成用户模型类的配置
+
+>工具>运行manage.py任务>
+提示需要install安装的包
+>在终端的虚拟环境下安装包
+pip install mysqlclient（迁移数据库的作用）
+pip install Pillow（图形库的作用）
+pip install pymysql（python的mysql库的作用）
+
+>工具>运行manage.py任务>
+>运行makemigrations（保存迁移文件）
+或在终端运行python.\manage.py makemigrations
+>在setting.py里面的DATABASES部分，添加代码定义mysql版本的配置
+pymysql.version_info=(1,4,6,"final",0)
+pymysql.install_as_MySQLdb()
+>运行migrate（迁移文件到数据库）
+或在终端运行python.\manage.py migrate
+
+>迁移数据到数据库成功了
+>打开sqlyog查看迁移成功的表myapp_user,还能看到django自带的其他配置表但不动它们
+
+>准备登录功能的实现
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.login空路由'和'views.login/登录路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>在myapp目录的views.py创建login登录函数
+>在myapp目录的views.py配置
+>from django.shortcuts import render
+>from myapp.models import User
+>from django.contrib.auth.hashers import check_password,make_password
+>from django.http import HttpResponse
+>>>
+>>>
+>>>
+>构筑前端页面(login.html)，打开moban5539的前端文件，找到所需要的html页面，打开为网页，查看网址的文件名.html的后缀名称
+>打开moban5539，根据查看网址的文件名.html的后缀名称，找到该页面的名字的文件，右键打开为vscode，复制代码到pycharm进行操作
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（这里把模版复制粘贴到了static目录里，作为模版调用）
+>开始在pycharm的login.html修改页面代码
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的login前端页面
+>看sqlyog，可以发现里面的myapp_user表会发现还没有表数据
+
+
+>准备登出功能的实现
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.logout登出路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>在myapp目录的views.py创建logout登出函数
+>在myapp目录的views.py配置
+
+>准备注册功能的实现
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.register注册路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>在myapp目录的views.py创建register注册函数
+>在myapp目录的views.py配置
+>>>
+>>>
+>>>
+>构筑前端页面(register.html)，打开moban5539的前端文件，找到所需要的html页面，打开为网页，查看网址的文件名.html的后缀名称
+>打开moban5539，根据查看网址的文件名.html的后缀名称，找到该页面的名字的文件，右键打开为vscode，复制代码到pycharm进行操作
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>开始在pycharm的register.html修改页面代码
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的register前端页面
+
+
+
+5.
+搭建jd_djangoProject项目的Django后台
+（实现在http://127.0.0.1:8000/admin/网页，输入超级管理员账号，对表单直接进行CRUD或新增 / 编辑 / 删除 / 搜索，而完全不用自己写HTML）
+
+
+6.
+>准备首页功能的实现（py首页base.html + py主页index.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.index首页路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从后面的8.跳回来，开始定义index主页后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>在myapp目录的views.py创建 def index 主页视图函数，写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(base.html)，打开moban5539的前端文件，找到所需要的html页面，打开为网页，查看网址的文件名.html的后缀名称
+>打开moban5539，根据查看网址的文件名.html的后缀名称，找到该页面的名字的文件，右键打开为vscode，复制代码到pycharm进行操作
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>复制vscode的index.html，粘贴到pycharm的base.html修改页面代码（这里的index源码被分为两个部分，一个部分index的部分内容用来构建base首页背景和侧边栏负责导航，另一个部分index用来继承base来只做一个首页上的主页图表）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的base.html首页背景和侧边栏负责导航
+>>>
+>>>
+>>>
+>构筑前端页面(index.html)，打开moban5539的前端文件，找到所需要的html页面，打开为网页，查看网址的文件名.html的后缀名称
+>打开moban5539，根据查看网址的文件名.html的后缀名称，找到该页面的名字的文件，右键打开为vscode，复制代码到pycharm进行操作
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>复制vscode的index.html，粘贴到pycharm的base.html修改页面代码（这里的index源码被分为两个部分，一个部分index的部分内容用来修改构建base首页背景和侧边栏负责导航，另一个部分index用来继承base来只修改构建一个继承了base.html首页上的主页图表）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的index.html继承了base.html首页上的主页图表（空页面）
+>base首页导航和index主页前端部分的（空页面）已经完成，现在需要填充数据，准备爬取数据。
+>
+>从后面的8.跳回来，开始构筑index主页前端部分的（填充数据，图表）
+>在index.html里面，写Django模版语言，在views获取后端数据发送到前端index.html的模版语言，显示数据。
+>在index.html里面，调用javascript，写几个Chart图表，修改配置对应的图表(这些图表的原代码在这里面 moban5539\assets\js\index.js)
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的index.html继承了base.html首页上的主页图表（填充了数据和图表的页面）首页背景和侧边栏负责导航和主页
+
+
+7.
+>在浏览器搜索 ipdaili.txt，把CSDN Blog的教程拿出来魔改并优化代码。
+>打开JDspiders项目，创建JDspiders4目录。
+>在JDspiders4目录下，创建IPmain4.py文件，自动，进行爬取ip地址（把IP网页上爬取的代理IP，放到proxy.txt，再验证有效的代理IP，放到valid.txt）
+>在JDspiders4目录下，创建IPformat文件，自动，把爬取ip地址，进行格式化（把valid.txt转换为正常IP的格式，为ipdaili.txt）
+>在JDspiders4目录下，创建IPcheck文件，先自动再手动，把爬取ip地址，格式化后，进行过滤有效ip（把ipdaili.txt检查是否可用，结果输出在控制台，手动复制控制台的ip粘贴到ipdaili2.txt）
+>在JDspiders4目录下，创建IPprocess文件，先自动再手动，把爬取ip地址，格式化后，有效过滤ip，进行再次过滤和正则并留下可用ip（把ipdaili2.txt检查是否可用，只留下可用的，自动存到ipdaili4.txt，把ipdaili4.txt的ip复制到jd_djangoProject项目路径里面的ipdaili.txt文件夹里面，即在D:\work\code\Jd\jd_djangoProject\spiders\ipdaili.txt）
+
+
+
+
+8.
+>爬虫
+>打开jd_djangoProject项目，在jd_djangoProject项目文件夹(注意：非jd_djangoProject目录下)，创建spiders目录(前面已经创建好了)。
+>
+>在spiders目录下，创建spider3.py文件构建爬虫部分脚本。（用来爬取，商品购后的评价信息）
+# 在终端安装需要的库包，例如pip install pandas lxml requests
+# 打开京东jd.com，登录京东账号，F12，网络，标头，请求标头，cookie:的代码复制下来；这里还有User-Agent但是用别的也行可以复制也可以不复制。
+# 过程：先运行pinpai（注意：记得注释data），得到result.csv，在rusult.csv里面的文本加上表头  商品id,标题,价格,店铺,品牌,图片
+#      再运行data（注意：记得注释pinpai），得到result1.csv，result.csv和result1.csv合并得到result2.csv，result2.csv格式，得到result3.csv
+>
+>
+>
+>在spiders目录下，创建UrlComments.py文件。（用来爬取，商品购后的评论内容）
+>在spiders目录下，创建CopyComments.json文件。
+#//手动过程：
+# 先在result3复制一个商品id，手动在浏览器打开url的网页，自己填上商品id然后回车，
+#   url网页如下，更改商品id和页码，即可去网页回车了。
+#       https://club.jd.com/comment/productPageComments.action?productId=100055622952&score=0&sortType=5&page=1&pageSize=10&isShadowSku=0&rid=0&fold=1
+# 把下面网页的页面的内容全选复制粘贴，粘贴到CopyComments.json，要确保该json文件只有一行代码。
+# 回来这里运行UrlComments.py，内容自动解析到comments.csv。
+#//注意，上面的comments.csv的评论['product_id','comment_date','comment','score']，真实的实际评论只有整数的200行，我新复制粘贴了很多次，即共计有14个的相同的评论的内容块，每个块大约200行评论，实际上的comments.csv有2800行评论。
+#       后续的SQLyog数据库的my_comment表，实际有2800行。
+>
+>
+>
+>搭建的页面，商品信息表（商品购后的评价信息），即信息表
+>我们通过models模型类来操作数据库
+>在myapp目录的migrations目录的models.py
+>写，自定义的class XinXi(models.Model):模型类
+>完成商品信息模型类的配置
+>
+>
+>
+>搭建的页面，商品评论表（商品购后的评论内容），即评论表
+>我们通过models模型类来操作数据库
+>在myapp目录的migrations目录的models.py
+>写，自定义的class Comment(models.Model):模型类
+>完成商品评论模型类的配置
+>
+>
+>
+>在工具>运行manage.py任务>
+>运行makemigrations（保存迁移文件）
+>   或在终端运行python.\manage.py makemigrations
+>运行migrate（迁移文件到数据库）
+>   或在终端运行python.\manage.py migrate
+>
+>
+>
+>在spiders目录下，创建data_to_mysql.py文件。（用来传输，商品购后的评价信息和商品购后的评论内容）
+>安装相关的库包
+>运行data_to_mysql.py文件，把myapp目录的migrations目录的数据迁移到mysql数据库，后续可用sqlyog或navicat查看里面的商品信息表和商品评论表。
+
+
+
+
+
+9.
+def ecommerce_products（商品信息）
+>准备商品信息功能的实现（py首页base.html + py主页ecommerce_products.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.ecommerce_products商品信息路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的8.跳回来，开始定义ecommerce_products商品信息后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>from django.core.paginator import Paginator，分页器
+>在myapp目录的views.py创建 def ecommerce_products商品信息视图函数，写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(ecommerce_products.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>继承base.html，在ecommerce_products.html里面写前端代码
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的ecommerce_products.html首页背景和侧边栏负责导航和商品信息导航
+
+
+
+10.
+def ecommerce_products_details（商品信息详情页）
+>准备商品信息详情页功能的实现（py首页base.html + py主页ecommerce_products_details.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.ecommerce_products_details商品信息详情页路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的8.跳回来，开始定义ecommerce_products_details商品信息详情页后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>from django.core.paginator import Paginator，分页器（这里用不上）
+>>from django.shortcuts import render,get_object_or_404，返回404
+>from random import sample，随机库的取样
+>在myapp目录的views.py创建 def ecommerce_products_details商品信息详情页视图函数，写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(ecommerce_products_details.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>继承base.html，在ecommerce_products_details.html里面写前端代码
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的ecommerce_products_details.html首页背景和侧边栏负责导航和商品信息详情页导航
+
+
+11.
+def ecommerce_comment_list（评论信息列表）
+>准备评论信息列表功能的实现（py首页base.html + py主页ecommerce_comment_list.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.ecommerce_comment_list评论信息列表路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的8.跳回来，开始定义ecommerce_comment_lis评论信息列表后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>from django.core.paginator import Paginator，分页器
+>>from django.shortcuts import render,get_object_or_404，返回404
+>from random import sample，随机库的取样
+>在myapp目录的views.py创建 def ecommerce_comment_list评论信息列表视图函数，写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(ecommerce_comment_list.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>继承base.html，在ecommerce_comment_list.html里面写前端代码
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的ecommerce_comment_list.html首页背景和侧边栏负责导航和评论信息列表导航
+
+
+12.
+def entirety_chart（整体分析图表）
+>准备整体分析图表功能的实现（py首页base.html + py主页entirety_chart.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.entirety_chart整体分析图表路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的8.跳回来，开始定义entirety_chart整体分析图表后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>from django.core.paginator import Paginator，分页器
+>>from django.shortcuts import render,get_object_or_404，返回404
+>from random import sample，随机库的取样
+>在myapp目录的views.py创建 def entirety_chart整体分析图表视图函数，写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(entirety_chart.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>在浏览器搜索 echarts.js在线引入，找到一个网页，这里是PingCode网页，复制粘贴里面的在线引入链接到代码里 <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+>继承base.html，在entirety_chart.html里面写前端代码（同时echarts的几个图表写在本文件下方entirety_chart.html）
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的entirety_chart.html首页背景和侧边栏负责导航和整体分析图表导航
+
+
+def relativity_chart（相关性分析图表）
+>准备相关性分析图表功能的实现（py首页base.html + py主页relativity_chart.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.relativity_chart相关性分析图表路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的8.跳回来，开始定义relativity_chart相关性分析图表后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>from django.core.paginator import Paginator，分页器
+>>from django.shortcuts import render,get_object_or_404，返回404
+>from random import sample，随机库的取样
+>在myapp目录的views.py创建 def relativity_chart相关性分析图表视图函数，写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(relativity_chart.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>在html文件引入script， 在script的apex-custom-for-relativity_chart.js里面手写js代码（这里的原js的apexcharts代码来自于apex-custom.js的十几个图表代码，选择部分图表代码复制过来，创建一个新的js文件apex-custom-for-relativity_chart.js并粘贴修改数据）
+>继承base.html，在relativity_chart.html里面写前端代码（同时在html文件引入script，在script的创建的js文件里面手写apexcharts的几个图表，即图表写在html文件的外部js文件apex-custom-for-relativity_chart.js文件）
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的relativity_chart.html首页背景和侧边栏负责导航和相关性分析图表导航
+
+
+def preprocess_text（评论内容分词函数）
+>import re，用来处理字符的正则库
+import jieba，在终端pip install jieba，用来分词
+>在myapp目录的views.py创建 def preprocess_text评论内容分词视图函数，先写逻辑把（def comment_chart评论内容图表视图函数）传进来的参数，进行字符正则处理和分词处理，再传给（def comment_chart评论内容图表视图函数）
+>>>
+>>>
+>>>
+def comment_chart（评论内容图表）
+>准备评论内容图表功能的实现（py首页base.html + py主页comment_chart.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.comment_chart评论内容图表路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的8.跳回来，开始定义comment_chart评论内容图表后端函数
+>from myapp.models import User,XinXi,Comment，用来导入模型的数据
+>from django.core.paginator import Paginator，分页器
+>>from django.shortcuts import render,get_object_or_404，返回404
+>from random import sample，随机库的取样
+>import pandas as pd，pandas库
+>from collections import Counter，用来统计词频
+>在myapp目录的views.py创建 def comment_chart评论内容图表视图函数，先写逻辑处理数据，再调用（def preprocess_text评论内容分词视图函数）处理数据，再写逻辑处理数据，再写Django逻辑传递数据到前端
+>>>
+>>>
+>>>
+>构筑前端页面(comment_chart.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>两种方法：
+>方法一：引用本地的ECharts库 和 echarts-wordcloud库
+    >在浏览器搜索echarts-wordcloud.min.js文件下载，找到对应的网址（看onenote笔记的详细流程：nodejs-npm安装配置使用，html-js词云图-使用，这两篇参考里面写的详细流程）
+    >安装nodejs-npm包，把下载好的node-v22.17.0-x64文件放到路径，路径就是D:\software\nodejs\node-v22.17.0-x64，运行node-v22.17.0-x64，安装完成
+    >打开项目>右下角>当前解释器>解释权设置>语言和框架>Node.js>Node解释器>选地址路径：D:\software\nodejs\node.exe>勾选按钮Node.js编码协助(A)>点击确定
+    >在控制台的终端，分别输入并运行，运行后，文件会自动下载，配置到当前项目jd_djangoProject下面的一个子目录，即会在当前项目jd_djangoProject下面，看到一个新的子目录node_modules
+    >npm install echarts
+    >npm install echarts-wordcloud
+    >在子目录node_modules里面找到我需要的文件，即echarts.min.js和echarts-wordcloud.min.js，把这两个文件放到script路径里面，配置完成
+    >    <script src="/static/assets/js/echarts.min.js"></script>
+    >    <script src="/static/assets/js/echarts-wordcloud.min.js"></script>
+>方法二：引用网址的ECharts库 和 echarts-wordcloud库
+    >   <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    >   <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud/dist/echarts-wordcloud.min.js">
+>在html里面，写echarts代码，写后端逻辑的结果context传输到前端写的echarts-wordcloud代码，
+>继承base.html，在comment_chart.html里面写，前端代码echarts图表JS代码，写后端传输逻辑结果到前端echarts-wordcloud词云图代码JS代码
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的comment_chart.html首页背景和侧边栏负责导航和评论内容图表导航
+
+
+>三个图表的区别：
+    > def entirety_chart.html   整体分析图表
+    >（使用了echarts库，在html内写js）
+    >   从后端跳转到前端html，在html里写html代码和js代码，即html调用js代码的jss通过id传给html的id，html的id构成的div组成了前端图表
+    >
+    > def relativity_chart.html   相关性分析图表
+    >（使用了apexcharts库，在html外写js）
+    >   从后端跳转到前端html，在html里写html代码，另外在外面的js里写js代码，即html调用js代码的jss通过id传给html的id，html的id构成的div组成了前端图表
+    >
+    > def comment_chart.html   评论内容图表
+    >（使用了echarts库和echarts-wordcloud库，在html内写js + 在html内调用Django模版语言结果写js）
+    >   从后端写一个Django逻辑处理comments.csv的内容并将处理结果存储到上下文context中，把context传给前端html，前端分为两个部分
+    >   一个部分是在html里写html代码和js代码，即html调用js代码的jss通过id传给html的id，html的id构成的div组成了前端图表
+    >   另一个部分是在html里写html代码和js代码，设置(固定的geographic-map-2或geographic-map-3)词云图js的id，配置词云图的js配置项，把后端的上下文context传输到js的配置项里，即html调用js代码的jss通过(固定的geographic-map-2或geographic-map-3)词云图js的id传给html的id，html的id构成的div组成了前端图表(词云图的图表)
+
+
+13.
+>从前面的8.跳回来，开始定义机器学习模型的后端模型（随机森林模型，逻辑回归模型）
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score,mean_squared_error
+from joblib import dump
+>在jd_djangoProject项目下面，创建一个buildmodel目录，在该目录下面，创建一个build.py文件，同时把spiders的result3.csv复制粘贴在该目录下。
+>在build.py文件，读取result3.csv文件，文件内容是销售数据信息，对销售数据，进行机器学习的 随机森林销售模型 和 逻辑回归销售模型 的建模，过程是：读取-定义-选择-编码-划分-训练-保存-评估
+>读取 数据集data
+>定义 销量区间sales_range
+>选择 特征features 和 目标变量target
+>编码 用编码器brand_label_encoder 对data['品牌'] 进行 品牌标签 编码
+>    用编码器target_label_encoder 对data['sales_range'] 进行 目标变量标签 编码
+>划分 特征features 和 目标变量target 的训练集和测试集 X_train, X_test, y_train, y_test
+>训练 用随机森林模型 去训练 (X_train, y_train)训练集 得出训练结果random_forest_model
+    >保存 随机森林模型的训练结果random_forest_model
+    >保存 品牌编码器label_encoder
+    >保存 目标变量编码器target_encoder
+    >评估 随机森林模型 在用X_test测试集的测试后得出测试好的测试结果random_forest_predictions，实际测试集的目标变量y_test 与 预测结果random_forest_predictions对象 ，两者之间的准确率计算后，返回准确率的计算结果random_forest_accuracy对象
+>训练 用逻辑回归模型，去训练(X_train, y_train)训练集，得出训练结果logistic_regression_model
+    >保存 逻辑回归模型的训练结果logistic_regression_model
+    >评估 逻辑回归模型 在用X_test测试集的测试后，得出测试好的测试结果logistic_regression_predictions，实际测试集的目标变量y_test 与 预测结果logistic_regression_predictions对象，两者之间的准确率计算后，返回准确率的计算结果logistic_regression_accuracy对象。
+
+
+14.
+>从前面的13.跳回来，开始定义机器学习模型的后端函数（def Speculate函数）
+from joblib import load
+import pandas as pd
+>在jd_djangoProject项目下面，创建一个没有子目录的文件，即创建speculate.py文件。
+>在speculate文件，定义一个def Speculate函数
+    > 定义一个函数
+        > 加载之前训练好的模型和编码器。
+        > 对新的商品数据进行预处理。
+        > 使用随机森林模型进行销量区间预测。
+        > 用反编码器将预测结果映射回原始的销量区间标签。
+        > 打印并返回预测结果。
+> 输入新的商品数据，调用函数，快速预测其销量区间。
+>调用def Speculate 函数，传入示例数据 example_input，进行逻辑森林的销量区间预测，并将结果存储在 predicted_range 中。
+
+
+15.
+def sale_data_predict（销售预测）
+>准备销售预测功能的实现（py首页base.html + py主页sale_data_predict.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.sale_data_predict销售预测路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的14.跳回来，开始定义sale_data_predict销售预测后端函数
+    >from speculate import Speculate，用来导入随机森林模型的函数def Speculate
+>在myapp目录的views.py创建 def sale_data_predict销售预测视图函数
+>   注意，根据之前jd_djangoProject项目的speculate.py文件的Speculate函数，函数定义的df二维数据框架DataFrame，其中df的特征列有多列features = ["价格", "品牌", "好评率", "平均分"] 共4列，对4列数据调用随机森林模型得出预测结果（这里的随机森林模型在build.py也是用这4列训练出来的）
+>所以，这里的def sale_data_predict销售预测视图函数，处理的逻辑也是定义这4列的数据
+>全过程是：用户从前端输入4列的数据，这4列的数据从html前端post到后端的sale_data_predict函数，sale_data_predict后端函数受到数据后检查数据，
+>   post数据有问题就用Django模版语言，把报错发到前端html提醒用户修改好数据，
+>   post数据没问题就调用Speculate函数，对用户post的4列数据进行随机森林预测，得到结果result，
+>   无论数据是否有问题，逻辑都要传递给模板上下文数据context，包括，
+>   context = {
+>       'result': result,   #预测结果
+>       'brand': brand,     #品牌信息
+>       'rating': rating,   #好评率信息
+>       'price': price,     #价格信息
+>       'average_score': average_score,     #平均分信息
+>       'error_message': error_message      #错误信息
+>   }
+>   渲染sale_data_predict.html模板，返回到sale_data_predict.html模板，同时传递上下文数据context，以Django模版语言把数据在html前端显示出来。
+>>>
+>>>
+>>>
+>构筑前端页面(sale_data_predict.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的sale_data_predict.html首页背景和侧边栏负责导航和销售预测导航
+
+
+16.
+def ApexCharts_learn_demo（ApexCharts图表学习样本图表）
+>修改来自12.的def relativity_chart（相关性分析图表），所以这里略。
+
+
+17.
+@login_required
+def user_profile_admin（用户信息）
+>准备用户信息功能的实现（py首页base.html + py主页user_profile_admin.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.user_profile_admin用户信息路由'
+>在myapp目录的urls.py配置
+>from django.urls import path
+>from . import views
+>从前面的6.跳回来，开始定义user_profile_admin用户信息后端函数
+>from django.contrib.auth.decorators import login_required
+    > 导入 Django 自带的login_required装饰器，用于限制未登录用户访问某个视图函数。例如：给视图函数加上@login_required后，未登录用户访问时会自动跳转到登录页。
+>from django.shortcuts import render, redirect, get_object_or_404
+    > 导入 Django 的快捷函数：
+        >    # render：用于渲染模板并返回 HTTP 响应（将数据传递给 HTML 页面）。
+        >    # redirect：用于重定向到其他 URL（如表单提交后跳转到首页）。
+        >    # get_object_or_404：根据条件查询数据库对象，若不存在则返回 404 错误（替代直接使用Model.objects.get()，更友好地处理不存在的情况）。
+>from django.contrib import messages
+    > 导入 Django 的消息框架，用于在视图和模板之间传递一次性通知（如 “操作成功”“错误提示”），通常配合messages.success(request, "提示内容")使用。
+>from .models import User
+    > 导入 从当前应用（.表示当前目录）的models.py文件中导入User模型（数据库表结构定义），用于操作用户相关的数据（如查询、创建用户）。
+>在myapp目录的views.py创建 def user_profile_admin用户信息视图函数，用户通过post在前端html输入数据的值submit提交到后端，后端通过键值对get获取前端的值，
+    >后端把该值保存在user对象的属性中，后续会调用user.save()将修改保存到Django官方认证体系的user的数据库中，后端把上下文user返回给前端的Django模版语言显示数据。
+>>>
+>>>
+>>>
+>构筑前端页面(user_profile_admin.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的user_profile_admin.html首页背景和侧边栏负责导航和用户信息导航
+
+
+18.
+@login_required
+@require_http_methods(["GET", "POST"])
+def reset_password（修改密码）
+>准备修改密码功能的实现（py首页base.html + py主页reset_password.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+创建urlpatterns=[添加需要的路由],包括'views.reset_password修改密码路由'
+>在myapp目录的urls.py配置
+    >from django.urls import path
+    >from . import views
+>从前面的6.跳回来，开始定义reset_password修改密码后端函数
+    >from django.contrib.auth import authenticate，导入 Django 的认证函数，用于验证用户账号密码是否正确。
+    >from django.contrib.auth.decorators import login_required，导入登录验证装饰器，用于限制未登录用户访问特定视图。
+    >from django.http import JsonResponse，导入 Django 的 Json 响应类，用于返回 JSON 格式的 HTTP 响应。
+    >from django.shortcuts import render，导入渲染函数，用于将模板与数据结合并返回 HTML 响应。
+    >from django.views.decorators.http import require_http_methods，导入 HTTP 方法限制装饰器，用于指定视图仅接受特定的 HTTP 请求方法（如 GET、POST）。
+    >import re，导入 Python 的正则表达式模块，用于字符串的模式匹配和处理。
+    >from django.contrib.auth import login as django_login，从 Django 认证模块导入login函数并起别名为django_login，用于在验证用户身份后完成登录状态的创建。
+    >from django.contrib import messages，导入 Django 的消息框架，用于在视图和模板间传递一次性的提示信息（如操作成功、错误提示等）。
+>在myapp目录的views.py创建 def reset_password修改密码视图函数，用户通过post在前端html输入数据的值submit提交到后端，后端通过键值对get获取前端的值，
+    >后端把该值保存在 old_pwd对象 new_pwd对象 cf_pwd对象 的不同的三个属性中，对三个属性进行：空值检查，格式检查，密码一致性检查，原密码验证，后续会调用user.save()将修改后的 new_pwd对象 保存到Django官方认证体系的user的数据库中。
+>>>
+>>>
+>>>
+>构筑前端页面(reset_password.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的reset_password.html首页背景和侧边栏负责导航和修改密码导航
+
+
+19.
+@permission_required('myapp.can_publish', raise_exception=True)
+def article_list（用户权限函数-后台编辑组article的用户权限为举例）
+>准备后台编辑组功能的实现（py首页base.html + py主页article_list.html）
+>在myapp目录的urls.py配置url,参考jd_djangoProject目录的urls.py的urlpatterns=[...]列表
+    >创建urlpatterns=[添加需要的路由],包括'views.article_list后台编辑组路由'
+>在myapp目录的urls.py配置
+    >from django.urls import path
+    >from . import views
+>从前面的6.跳回来，开始定义article_list后台编辑组后端函数
+    >from django.shortcuts import render，导入 Django 的render快捷函数，用于将数据传入模板并生成 HTML 响应返回给客户端。
+    >from django.contrib.auth.decorators import permission_required，导入 Django 的权限验证装饰器，用于限制只有拥有特定权限的用户才能访问被装饰的视图函数。
+>函数的前提，在Django后台：
+    >登录http://127.0.0.1:8000/admin/
+    >账号/超级用户：superuser
+    >密码/超级用户密码：（你自己的超级用户密码，此处不公开）
+    >在Django后台，设置>后台用户权限分组：财务组（这里无用户）,编辑组(这里只有admin5用户)
+    >
+    >登录http://127.0.0.1:8000
+    >普通用户admin（admin2,admin3,admin4,admin5）
+    >普通用户密码（你自己的测试密码，此处不公开）
+    >普通用户手机12345678900（用户手机，改最后一位数字，例如admin2的手机是12345678902）
+    >普通用户邮箱admin@qq.com（用户邮箱，改加最后一位数字，例如admin2的邮箱是admin2@qq.com）
+>在myapp目录的views.py创建 def article_list后台编辑组视图函数，
+    > @permission_required('myapp.can_publish', raise_exception=True)：
+    > def article_list(request)：
+    > articles = Article.objects.all()
+    > return render(request, 'article_list.html', {'articles': articles})
+        > 这是权限验证装饰器，指定只有拥有myapp应用中can_publish权限的用户才能访问该视图；raise_exception=True表示当用户无权限时直接返回 403 错误，而非重定向到登录页。
+        > 定义了名为article_list的视图函数，接收request请求对象作为参数。
+        > 函数内部通过Article.objects.all()查询所有文章数据，
+        > 使用render函数将文章数据传递给article_list.html模板并返回渲染后的页面。
+    > 总结：整体作用，限制只有特定权限的用户才能访问文章列表页面，增强了应用的权限管控。
+>举例，
+>superuser在后台只把admin5用户设置为 myapp应用中can_publish权限的用户，而在前端写的html的Django模版语言，只有can_publish权限的用户才能访问该视图的内容（article_list视图里的article_list.html），否则无权限用户会返回403报错页面，即返回403.html模版
+>superuser登录后台，在地址里的后台页面进行编辑内容http://127.0.0.1:8000/admin/myapp/article/1/change/，编辑的文章会在admin5用户登录login后的base的article_list.html里面显示出来，而其他无权限用户则 无法看到显示的链接 和 无法看到编辑的内容。
+>例如admin5登录login后 能看到的 http://127.0.0.1:8000/admin/链接 和 superuser超级用户在后台编辑的文章内容
+>>>
+>>>
+>>>
+>构筑前端页面(article_list.html)，
+>打开moban5539，找到assets文件，复制粘贴到static目录里面（前面已完成）
+>在文件全部的/assets/...路径前面，加一个前置路径/static，变成/static/assets/...
+>运行jd_djangoProject项目，打开控制台的网页 http://127.0.0.1:8000/ 可以看到跳转打开的article_list.html首页背景和侧边栏负责导航和后台编辑组导航
+
+
+19.
+def handler403（403报错函数）
+>从前面的18.跳回来，开始定义403报错函数的后端函数（def handler403函数）
+>在myapp目录的views.py创建 def handler403403报错函数，
+> def handler403(request, exception)：
+>     return render(request, '403.html', status=403)
+        > 这段代码是 Django 中自定义的 403 错误处理视图函数，即定义了处理 403（权限拒绝）错误的视图，接收请求对象request和错误异常exception作为参数，
+        > 函数通过render方法渲染自定义的403.html模板，并返回带有 403 状态码的 HTTP 响应。
+> 总结：作用是，当用户访问没有权限的资源时，系统会调用该函数，显示自定义的 403 权限错误页面，而不是 Django 默认的错误页面，提升用户体验和系统专业性。
+
+
+20.
+def article_detail
+>（用于debug学习，忽略，详情可参考onenote笔记）
+
+
+21.
+全流程总结：
+    >项目配置，mysql数据库，创建目录和文件，
+    >用户表模型类models，url，（登录页面，注册页面，登出函数，base首页，index主页）视图函数和html页面，
+    >商品信息表模型类models，爬ip爬虫，url，（商品列表，商品详情页）视图函数和html页面，
+    >商品评论表模型类models，url（评论列表）视图函数和html页面，
+    >浏览器下载配置库包，url，可视化图表（整体分析，相关性分析，评论分析）视图函数和html页面，
+    >安装机器学习库包，url，机器学习模型，机器学习函数，（销售数据预测）视图函数和html页面，
+    >url，（apexcharts的demo）视图函数和html页面，
+    >(继承用户表后的)抽象用户表模型类url，（个人信息，修改密码，403）视图函数和html页面，
+    >Article表模型类models，url，Django后台分组用户权限（Article）视图函数和html页面。
+
+
+22.结束（25.7.24）。
+
+
+
+

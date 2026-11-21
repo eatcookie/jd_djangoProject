@@ -1,0 +1,161 @@
+<!-- 继承base首页页面 -->
+<!-- 这行代码表示当前页面继承了 base.html 模板。base.html 是一个基础模板，
+通常包含网站的通用结构（如头部、尾部等），而当前页面会在其基础上添加或修改特定的内容。-->
+{% extends 'base.html' %}*/
+
+
+<!--新添的content主体内容块 -->
+<!--这里定义了一个名为 content 的内容块。在 base.html 模板中，
+会有一个对应的 % block content % 区域，当前页面的内容会替换掉 base.html 中的该区域内容。-->
+{% block content %}
+
+<!--这里定义了一个CSS类的 ellipsis 的样式类，用于处理文本溢出时的显示效果。
+    当文本长度，超过容器宽度时，会显示省略号。-->
+    <style>
+        .ellipsis {
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 溢出隐藏 */
+            text-overflow: ellipsis; /* 用省略号表示溢出部分 */
+            max-width: 200px; /* 设置最大宽度，根据需要调整 */
+        }
+    </style>
+
+
+
+    <!--这部分定义了页面的主要内容区域，放置页面的核心内容，包括一个面包屑导航栏（显示当前页面的位置）和一个标题。-->
+    <!--页面主要内容区域，销售数据预测wrapper -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--面包屑导航栏，销售数据预测栏，显示标题和导航链接-->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="breadcrumb-title pe-3">销量数据预测</div>
+                <div class="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">预测销量等级</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 行容器，销售数据预测的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">预测销量等级</h6>
+            <hr>
+
+            <!--表单区域，创建一个行和列的大布局结构，用来放置表单-->
+            <div class="row">
+                <div class="col-xl-7 mx-auto">
+
+                    <!--输入商品数据信息，显示一个标题（行）-->
+                    <h6 class="mb-0 text-uppercase">输入需要预测的商品数据信息</h6>
+                    <hr/>
+
+                    <!--POST表单的块级容器-->
+                    <div class="card border-top border-0 border-4 border-primary">
+                        <div class="card-body p-5">
+
+                            <!--POST表单，html前端的POST表单，定义一个表单（列）-->
+                            <!--使用POST方法，用户在该表单中输入数据并点击按钮提交，这些数据通过POST请求发送到
+                                后端的url的，views的，sale_data_predict()视图函数的，request.POST.get()方法，获取这些数据-->
+                            <!--{ % csrf_token % }用于防止跨站请求伪造攻击。-->
+                            <form class="row g-3" method="post" action="{% url 'sale_data_predict' %}">
+                                {% csrf_token %}
+
+
+                                <!--html前端的POST表单的块级容器-->
+                                <!--定义表单的 输入字段，包括：品牌选择框、好评率输入框、价格输入框、平均分输入框。
+                                    每个输入框都有一个name属性，用于后端通过request.POST.get()获取用户输入的数据。-->
+                                <!--这里以 输入字段的 好评率输入框 举例：
+                                    name="rating"
+                                        name：这里是html前端表单的<input>标签的属性值name，
+                                        "rating"：输入框的名称
+                                    name="rating"指定了：该<input>标签的属性值为name，该输入框的名称为rating
+                                        当前端表单提交时，用户 输入的值 会以 键值对 的形式包含在POST请求中，
+                                        即字典键值对  {键为rating即字段 : 值为用户输入的内容即值}
+                                        在后端的sale_data_predict视图函数中，通过request.POST.get("rating", '')获取这个值
+                                    rating = request.POST.get("rating", '')
+                                        这里"rating"参数，返回的是字段的值，表示"rating"的用户输入的值
+                                        这里''参数，返回的是默认值空字符串，表示"rating"不在POST数据中-->
+
+                                <!--定义表单的 输入字段 品牌选择框-->
+                                <div class="col-md-6">
+                                    <label for="brand" class="form-label">商品品牌</label>
+                                    <!--select选择框/下拉选择框/下拉框-->
+                                    <select id="brand" name="brand" class="form-select">
+                                        <option selected>请选择品牌...</option>
+                                        <option>荣耀（HONOR）</option>
+                                        <option>华为（HUAWEI）</option>
+                                        <option>小米（MI）</option>
+                                        <option>vivo</option>
+                                        <option>真我（realme）</option>
+                                        <option>OPPO</option>
+                                    </select>
+                                </div>
+
+                                <!--定义表单的 输入字段 好评输入框-->
+                                <div class="col-md-6">
+                                    <label for="rating" class="form-label">好评率</label>
+                                    <!--input输入框-->
+                                    <input type="number" step="0.01" class="form-control" id="rating" name="rating" placeholder="输入范围0-1">
+                                </div>
+
+                                <!--定义表单的 输入字段 商品价格输入框-->
+                                <div class="col-md-6">
+                                    <label for="price" class="form-label">商品价格</label>
+                                    <!--input输入框-->
+                                    <input type="number" step="0.01" class="form-control" id="price" name="price" placeholder="请输入价格">
+                                </div>
+
+                                <!--定义表单的 输入字段 平均分输入框-->
+                                <div class="col-md-6">
+                                    <label for="average_score" class="form-label">平均分</label>
+                                    <!--input输入框-->
+                                    <input type="number" step="0.01" class="form-control" id="average_score" name="average_score" value="" placeholder="输入范围0-5">
+                                </div>
+
+                                <!--定义表单的 提交按钮 用户点击表单后，数据发送到后端-->
+                                <div class="col-12">
+                                    <!--button按钮-->
+                                    <button type="submit" class="btn btn-primary px-5">点击预测</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!--显示错误信息和预测结果，<div>块级容器 + { % % }Django模版语言-->
+                    <div class="tab-content pt-3">
+                        <div class="tab-pane fade show active" id="primaryhome" role="tabpanel">
+
+                            <!--如果后端传递了错误消息（error_message），则显示错误信息-->
+                            {% if error_message %}
+                                <p class="text-danger">{{ error_message }}</p>
+                            {% endif %}
+
+                            <!--如果后端传递了预测结果（result）
+                                则显示预测结果（result）和用户输入的数据（brand、rating、price、average_score）-->
+                            {% if result %}
+                                <h6 class="mb-0 text-uppercase">商品数据信息-预测结果</h6>
+                                <hr/>
+                                <p></p>
+                                <p>品牌：{{ brand }}</p>
+                                <p>好评率：{{ rating }}</p>
+                                <p>价格：{{ price }}</p>
+                                <p>平均分：{{ average_score }}</p>
+                                <p>预测销量等级：{{ result }}</p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <hr/>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+

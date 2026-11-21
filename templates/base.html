@@ -1,0 +1,380 @@
+<!-- base模版构建页面 base.html是基础模板块-->
+<!-- #说明：base基础模板块，写了首页的左侧导航栏和页眉和页脚，base位于登录后的主要页面的边边框框的部分(base才是实际的首页)，但不包括主要页面的右边的index的部分(index会被设置为表面的首页) -->
+<!--
+#说明：基础模板块，包括了以下内容
+base.html基本结构，包括：
+    <!DOCTYPE html>：声明文档类型为 HTML5。
+    <html lang="en">：根元素，指定页面语言为英语lang。
+    <head>：包含页面的：元信息meta(字符集charset和视口设置name)、样式表链接link、页面标题title。
+    <body>：包含页面的可见内容：封装wrapper(封装侧边栏sidebar-wrapper、导航栏nav、页眉header、子页面插入封装% block content%、覆盖物overlay、按钮button、页脚footer)、
+                            JavaScript脚本script、其他页面插入封装%block jss%。
+ -->
+
+<!-- 首页页面：左侧导航栏和页眉和页脚 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags 要求 元数据 标签-->
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!--favicon 网站图标-->
+	<link rel="icon" href="/static/assets/images/logo-icon-daa2.png" type="image/png" />
+
+	<!--plugins 插件-->
+	<link href="/static/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <link href="/static/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+	<link href="/static/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+	<link href="/static/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+
+    <!-- loader 载入程序-->
+	<link href="/static/assets/css/pace.min.css" rel="stylesheet" />
+	<script src="/static/assets/js/pace.min.js"></script>
+
+	<!-- Bootstrap CSS 解靴带 层叠样式表-->
+	<link href="/static/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+	<link href="/static/assets/css/app.css" rel="stylesheet">
+	<link href="/static/assets/css/icons.css" rel="stylesheet">
+
+    <!-- Theme Style CSS 主题样式 层叠样式表-->
+    <link rel="stylesheet" href="/static/assets/css/dark-theme.css" />
+    <link rel="stylesheet" href="/static/assets/css/semi-dark.css" />
+    <link rel="stylesheet" href="/static/assets/css/header-colors.css" />
+
+	<title>京东商品数据分析可视化系统</title>
+</head>
+
+
+<body>
+	<!--wrapper-->
+	<div class="wrapper">
+
+        <!--sidebar wrapper-->
+        <div class="sidebar-wrapper"data-simplebar="true">
+
+            <div class="sidebar-header">
+
+                <div>
+                    <img src="/static/assets/images/logo-icon-daa2.png"
+                         class="logo-icon-daa2"
+                         alt="logo icon"
+                         style="width:48px;height:48px;">
+                </div>
+
+                <div>
+                    <h4 class="logo-text" style="color:#1296db">数据分析系统</h4>
+                </div>
+
+                <div class="toggle-icon ms-auto"><i class="bx bx=arrow-to-left"></i>
+                </div>
+
+            </div>
+
+             <!--base(真正的首页)的左边的和右边的那些url们，注意：这里下面写的<div class="menu-title">是"首页"，url是指向index这个表面的首页-->
+            <ul class="metismenu" id="menu">
+
+                <li>
+                    <a href="{% url 'index' %}">
+                        <div class="parent-icon">
+                            <i class='bx bx-home-circle'></i>
+                        </div>
+                        <div class="menu-title">
+                            首页
+                        </div>
+                    </a>
+                </li>
+
+                <li class="menu-label">个人数据</li>
+
+                <li>
+                    <a href="javascript:;" class="has-arrow">
+                        <div class="parent-icon">
+                            <i class='bx bx-grid-alt'></i>
+                        </div>
+                        <div class="menu-title">
+                            个人中心
+                        </div>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'user_profile_admin' %}">
+                                <i class="bx bx-right-arrow-alt"></i>
+                                个人信息
+                            </a>
+                        </li>
+{#                        {% if user.is_authenticated %}#}
+{#                        <li>#}
+{#                            <a href="{% url 'reset_password' %}">#}
+{#                                <i class="bx bx-right-arrow-alt"></i>#}
+{#                                修改密码#}
+{#                            </a>#}
+{#                        </li>#}
+{#                        {% else %}#}
+{#                        <li>#}
+{#                            <a href="{% url 'login' %}">#}
+{#                                <i class="bx bx-right-arrow-alt"></i>#}
+{#                                登录#}
+{#                            </a>#}
+{#                        </li>#}
+{#                        {% endif %}#}
+                        <li>
+                            <a href="{% url 'reset_password' %}">
+                                <i class="bx bx-right-arrow-alt"></i>
+                                修改密码
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu-label">数据信息</li>
+
+                <li>
+                    <a href="javascript:;" class="has-arrow">
+                        <div class="parent-icon">
+                            <i class='bx bx-cart'></i>
+                        </div>
+                        <div class="menu-title">
+                            商品数据
+                        </div>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'ecommerce_products' %}">
+                                <i class="bx bx-right-arrow-alt"></i>
+                                商品列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript:;" class="has-arrow" >
+                        <div class="parent-icon">
+                            <i class='bx bx-bookmark-heart'></i>
+                        </div>
+                        <div class="menu-title">
+                            评论数据
+                        </div>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'ecommerce_comment_list' %}">
+                                <i class="bx bx-right-arrow-alt"></i>
+                                评论列表
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="menu-label">可视化图表</li>
+
+                <li>
+                    <a href="{% url 'entirety_chart' %}">
+                        <div class="parent-icon">
+                            <i class='bx bx-cookie'></i>
+                        </div>
+                        <div class="menu-title">
+                            整体分析
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'relativity_chart' %}">
+                        <div class="parent-icon">
+                            <i class="bx bx-line-chart"></i>
+                        </div>
+                        <div class="menu-title">
+                            相关性分析
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'comment_chart' %}">
+                        <div class="parent-icon">
+                            <i class="bx bx-comment"></i>
+                        </div>
+                        <div class="menu-title">
+                            评论分析
+                        </div>
+                    </a>
+                </li>
+
+                <li class="menu-label">机器学习算法</li>
+
+                <li>
+                    <a href="{% url 'sale_data_predict' %}" class="has-arrow" >
+                        <div class="parent-icon">
+                            <i class="bx bx-lock"></i>
+                        </div>
+                        <div class="menu-title">
+                            销量数据预测
+                        </div>
+                    </a>
+                </li>
+
+                <li class="menu-label">数据图表</li>
+
+                <li>
+                    <a href="{% url 'ApexCharts_learn_demo' %}">
+                        <div class="parent-icon">
+                            <i class='bx bx-home-circle'></i>
+                        </div>
+                        <div class="menu-title">
+                            ApexCharts
+                        </div>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'article-list' %}">
+                        <div class="parent-icon">
+                            <i class='bx bx-home-circle'></i>
+                        </div>
+                        <div class="menu-title">
+                            Article_Django_test
+                        </div>
+                    </a>
+                </li>
+
+
+            </ul>
+            <!--end navigation-->
+
+		</div>
+        <!--end sidebar wrapper-->
+
+
+        <!--start header-->
+        <header>
+
+            <div class="topbar d-flex align-items-center">
+                <nav class="navbar navbar-expand">
+
+                    <div class="mobile-toggle-menu"><i class="bx bx bx-menu"></i>
+                    </div>
+
+                    <div class="top-menu ms-auto">
+                        <ul class="navbar-nav align-items-center">
+
+							<li class="nav-item dropdown dropdown-large">
+								<div class="dropdown-menu dropdown-menu-end">
+                                    <div class="header-notifications-list">
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown dropdown-large">
+								<div class="dropdown-menu dropdown-menu-end">
+                                    <div class="header-message-list">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+					<div class="user-box dropdown">
+
+						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+
+{#                            <img src="/static/assets/images/avatars/avatar-admin-portrait3.png" class="user-img" alt="user avatar">#}
+							<img src="/static/assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
+
+                            <div class="user-info ps-3">
+								<p class="user-name mb-0">测试用户1</p>
+								<p class="designattion mb-0">普通用户</p>
+							</div>
+						</a>
+
+						<ul class="dropdown-menu dropdown-menu-end">
+
+							<li><a class="dropdown-item" href="{% url 'user_profile_admin' %}">
+                                <i class="bx bx-user"></i><span>个人信息</span></a>
+							</li>
+
+							<li><a class="dropdown-item" href="{% url 'reset_password' %}">
+                                <i class="bx bx-cog"></i><span>修改密码</span></a>
+							</li>
+
+                            <li>
+								<div class="dropdown-divider mb-0"></div>
+							</li>
+
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                <i class="bx bx-cog"></i><span>退出登录</span></a>
+							</li>
+
+						</ul>
+
+					</div>
+
+				</nav>
+			</div>
+		</header>
+		<!--end header -->
+
+
+        <!--#基础模板--本页面content引用，后面调用模版，默认在这里中间插入内容-->
+        <!--start page wrapper -->
+        {% block content %}
+
+        {% endblock content %}
+        <!--end page wrapper -->
+
+
+        <!--start overlay-->
+        <div class="overlay toggle-icon">
+        </div>
+        <!--end overlay-->
+
+        <!--Start Back To Top Button-->
+        <a href="JavaScript:;" class="back-to-top"><i class="bx bxs-up-arrow-alt"></i>
+        </a>
+        <!--End Back To Top Button-->
+
+        <!--start footer-->
+        <footer class="page-footer">
+            <p class="mb-0"> Copyright@2025.All right reserved jd_ksh base</p>
+        </footer>
+        <!--end footer-->
+
+    </div>
+    <!--end wrapper-->
+
+
+	<!-- Bootstrap JS -->
+	<script src="/static/assets/js/bootstrap.bundle.min.js"></script>
+
+	<!--plugins-->
+	<script src="/static/assets/js/jquery.min.js"></script>
+	<script src="/static/assets/plugins/simplebar/js/simplebar.min.js"></script>
+	<script src="/static/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+	<script src="/static/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+	<script src="/static/assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="/static/assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+	<script src="/static/assets/plugins/chartjs/js/Chart.min.js"></script>
+	<script src="/static/assets/plugins/chartjs/js/Chart.extension.js"></script>
+
+    <!--#base基础模板的jss--定义一个名为jss的块，这里用来后续让其他子模版的jss，替换并覆盖掉base基础模版的jss，即后面调用子模版，默认在子模版会在这里中间插入内容 -->
+        <!--start page wrapper -->
+        {% block jss %}
+
+        {% endblock jss %}
+        <!--end page wrapper -->
+
+{#    <script src="/static/assets/js/index.js"></script>#}
+
+	<!--app JS-->
+	<script src="/static/assets/js/app.js"></script>
+
+</body>
+
+
+</html>

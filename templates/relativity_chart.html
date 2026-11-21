@@ -1,0 +1,122 @@
+<!-- 继承base首页页面 -->
+{% extends 'base.html' %}
+
+
+<!--新添的content主体内容块 -->
+{% block content %}
+
+        <style>
+        .ellipsis {
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden; /* 溢出隐藏 */
+            text-overflow: ellipsis; /* 用省略号表示溢出部分 */
+            max-width: 200px; /* 设置文本最大宽度，根据需要调整 */
+        }
+    </style>
+
+
+    <!--数据相关性分析wrapper -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--数据相关性信息栏，显示标题和导航链接-->
+            <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+                <div class="breadcrumb-title pe-3">数据相关性分析</div>
+                <div class="ps-3">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 p-0">
+                            <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">关系型分析图表</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+
+
+
+            <!-- 行容器，数据相关性分析的class文字标题 -->
+            <h6 class="mb-0 text-uppercase">关系型分析图表</h6>
+            <hr/>
+
+
+
+
+
+
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+
+
+                    <!-- r-chart002折线图 -->
+                    <h6 class="mb-0 text-uppercase">总评数和视频晒单数</h6>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="r-chart002"></div>
+                        </div>
+                    </div>
+                    <!-- 这里的 r-chart002 在src="/static/assets/plugins/apexcharts-bundle/js/apex-custom-for-relativity_chart.js"里面修改数据 -->
+
+
+                    <!-- r-chart1柱状图 -->
+                    <h6 class="mb-0 text-uppercase">评论分布</h6>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="r-chart1"></div>
+                        </div>
+                    </div>
+                    <!-- 这里的 r-chart1 在src="/static/assets/plugins/apexcharts-bundle/js/apex-custom-for-relativity_chart.js"里面修改数据 -->
+
+
+                    <!-- r-chart2水平柱状图 -->
+                    <h6 class="mb-0 text-uppercase">销售额排行榜</h6>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="r-chart2"></div>
+                        </div>
+                    </div>
+                    <!-- 这里的 r-chart1 在src="/static/assets/plugins/apexcharts-bundle/js/apex-custom-for-relativity_chart.js"里面修改数据 -->
+
+
+                    <!-- r-chart3柱状图与折线图的混合图/组合图 -->
+                    <h6 class="mb-0 text-uppercase">销量和好评率</h6>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="r-chart3"></div>
+                        </div>
+                    </div>
+                    <!-- 这里的 r-chart1 在src="/static/assets/plugins/apexcharts-bundle/js/apex-custom-for-relativity_chart.js"里面修改数据 -->
+
+
+                    <!-- r-chart4雷达图 -->
+                    <h6 class="mb-0 text-uppercase">多维度对比</h6>
+                    <hr/>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="r-chart4"></div>
+                        </div>
+                    </div>
+                    <!-- 这里的 r-chart1 在src="/static/assets/plugins/apexcharts-bundle/js/apex-custom-for-relativity_chart.js"里面修改数据 -->
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% block jss %}
+    <script src="/static/assets/plugins/apexcharts-bundle/js/apexcharts.min.js"></script>
+    <script src="/static/assets/plugins/apexcharts-bundle/js/apex-custom.js"></script>
+
+    <script src="/static/assets/plugins/apexcharts-bundle/js/apex-custom-for-relativity_chart.js"></script>
+
+    <script src="/static/assets/js/app.js"></script>
+    {% endblock %}
+
+{% endblock %}

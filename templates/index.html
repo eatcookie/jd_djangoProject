@@ -1,0 +1,374 @@
+<!-- index子模版引用base基础模板页面 index.html是子模板块-->
+<!-- #说明：之前的base.html写了实际的首页的左侧导航栏和页眉和页脚，这里的index.html写了首页右侧大主体的主要内容content，index即表面的首页 -->
+<!-- #说明：两者的关系，base.html相当于首页的大框架，index.html继承了base.html的框架后，在框架的继承上，再新添以下的大主体内容 -->
+<!--
+#说明：子模板块，包括了以下内容
+index.html基本结构，包括：
+    %extends 'base.html'%：声明继承base.html定义的通用的页面结构和样式
+    %block content%：定义子模块的独特的页面主要内容：
+        封装wrapper：(content上方的4个卡片)、(content中间的2个卡片)、(content下方的1个卡片+遍历products从后端传过来的数据)
+        JavaScript脚本script：jQuery库(用于简化JavaScript编程)、Chart.js库(用于绘制图表)、
+                             Chart.js库及其扩展库(用于绘制图表)、Chart.js库(用于绘制chart1、用于绘制chart2)。
+#index.html基本结构，总结：结合了HTML、CSS、JavaScript 和 Django模板语言，实现了动态数据展示和可视化效果。
+
+
+继承自：
+base.html基本结构，包括：
+    <!DOCTYPE html>：声明文档类型为 HTML5。
+    <html lang="en">：根元素，指定页面语言为英语lang。
+    <head>：包含页面的：元信息meta(字符集charset和视口设置name)、样式表链接link、页面标题title。
+    <body>：包含页面的可见内容：封装wrapper(导航栏nav)、页眉header、子模板主要内容插入%block content%、
+                            JavaScript脚本script、页脚footer、其他模板内容插入%block jss%。
+ -->
+
+
+
+
+<!-- 继承base首页页面 -->
+{% extends 'base.html' %}
+
+<!--新添的content主体内容 -->
+{% block content %}
+
+    <!--start page wrapper -->
+    <div class="page-wrapper">
+        <div class="page-content">
+
+            <!--首页content上方的表-->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+
+                <!--定义：列：数据量：卡片-->
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-3 border-info">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="mb-0 text-secondary">数据量</p>
+                                    <h4 class="my-1 text-info">6176</h4>
+                                    <p class="mb-0 font-13">数据来源：京东</p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i
+                                        class='bx bx-barcode'></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--定义：列：处理后的数据：卡片-->
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-3 border-success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="mb-0 text-secondary">处理后的数据</p>
+                                    <h4 class="my-1 text-success">192</h4>
+                                    <p class="mb-0 font-13">处理工具：Numpy</p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i
+                                        class='bx bxs-wallet'></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--定义：列：分析图表数量：卡片-->
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-3 border-danger">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="mb-0 text-secondary">分析图表数量</p>
+                                    <h4 class="my-1 text-danger">35</h4>
+                                    <p class="mb-0 font-13">分析工具：Pandas</p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto">
+                                    <i class='bx bxs-bar-chart-alt-2'></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--定义：列：网站用户数量：卡片-->
+                <div class="col">
+                    <div class="card radius-10 border-start border-0 border-3 border-warning">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="mb-0 text-secondary">网站用户数量</p>
+                                    <h4 class="my-1 text-warning">112</h4>
+                                    <p class="mb-0 font-13">近一周增加：2</p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i
+                                        class='bx bxs-group'></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end row-->
+
+            <!--首页content中间的表-->
+            <div class="row">
+
+                <!--定义：列：系统访问量变化：卡片-->
+                <div class="col-12 col-lg-8">
+                    <div class="card radius-10">
+                        <div class="card-body">
+
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">系统访问量变化</h6>
+                                </div>
+                                <div class="dropdown ms-auto">
+                                    <a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+                                       data-bs-toggle="dropdown">
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
+                                <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" style="color: #13A4E6"></i>登录人数</span>
+                                <span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" style="color: #ffc107"></i>注册人数</span>
+                            </div>
+
+                            <div class="chart-container-1">
+                                <canvas id="chart1"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--定义：列：用户访问类型：卡片-->
+                <div class="col-12 col-lg-4">
+                    <div class="card radius-10">
+
+                        <div class="card-body">
+
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">用户访问类型</h6>
+                                </div>
+                                <div class="dropdown ms-auto">
+                                    <a class="dropdown-toggle dropdown-toggle-nocaret"
+                                       href="#"
+                                       data-bs-toggle="dropdown"></a>
+                                </div>
+                            </div>
+
+                            <div class="chart-container-2 mt-4">
+                                <canvas id="chart2"></canvas>
+                            </div>
+
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                GET请求 <span style="background-color: #FF8405;" class="badge rounded-pill">75</span>
+                            </li>
+                            <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                POST请求<span style="background-color: #4453DB;" class="badge rounded-pill">25</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+            <!--end row-->
+
+            <!--首页content下方的表-->
+            <!--定义：列：销售数据排行榜：卡片-->
+            <div class="card radius-10">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h6 class="mb-0">销量数据排行</h6>
+                        </div>
+                        <div class="dropdown ms-auto">
+                            <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+
+                            <!--表格头的字段-->
+                            <thead class="table-light">
+                            <tr>
+                                <th>商品名</th>
+                                <th>图片</th>
+                                <th>店铺</th>
+                                <th>品牌</th>
+                                <th>价格</th>
+                                <th>销量</th>
+                                <th>好评率</th>
+                            </tr>
+                            </thead>
+
+                            <!--表格内容：从后端products传过来的数据，遍历-->
+                            <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>{{ product.product_name }}</td>
+
+                                    <td><img src="{{ product.img_url }}" class="product-img-2" alt="product img"></td>
+
+                                    <td>{{ product.shop }}</td>
+
+                                    <td><span class="badge bg-gradient-scooter text-white shadow-sm w-100">{{ product.brand }}</span></td>
+
+                                    <td>{{ product.price }}</td>
+
+                                    <td>{{ product.CommentCountStr }}</td>
+
+                                    <td>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-gradient-quepal" role="progressbar"
+                                                 style="width: {{ product.GoodRatePercent }}">
+                                            </div>
+                                        </div>
+                                        {{ product.GoodRatePercent }}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <!--end row-->
+
+        </div>
+    </div>
+    <!--start page wrapper -->
+
+
+    <!--plugins-->
+    <!-- JavaScript 脚本-->
+        <!--引入 jQuery 库，用于简化 JavaScript 编程-->
+        <!--引入 Chart.js 库，用于绘制图表-->
+        <!--引入 Chart.js 库及其扩展，用于绘制图表-->
+    <script src="/static/assets/js/jquery.min.js"></script>
+    <script src="/static/assets/plugins/chartjs/js/Chart.min.js"></script>
+    <script src="/static/assets/plugins/chartjs/js/Chart.extension.js"></script>
+
+    <script>
+
+        // chart 1
+        <!--Chart 1：定义一个柱状图bar，展示登录和注册人数的变化-->
+        var ctx = document.getElementById("chart1").getContext('2d');
+
+        var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+        gradientStroke1.addColorStop(0, '#13A4E6');
+        gradientStroke1.addColorStop(1, '#17c5ea');
+
+        var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+        gradientStroke2.addColorStop(0, '#ff8359');
+        gradientStroke2.addColorStop(1, '#ffdf40');
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                datasets: [{
+                    label: 'SigninCountStr',
+                    data: [65, 59, 80, 81, 65, 59, 80, 81, 59, 80, 81, 65],
+                    borderColor: gradientStroke1,
+                    backgroundColor: gradientStroke1,
+                    hoverBackgroundColor: gradientStroke1,
+                    pointRadius: 0,
+                    fill: false,
+                    borderWidth: 0
+                }, {
+                    label: 'SignupCountStr',
+                    data: [28, 48, 40, 19, 28, 48, 40, 19, 40, 19, 28, 48],
+                    borderColor: gradientStroke2,
+                    backgroundColor: gradientStroke2,
+                    hoverBackgroundColor: gradientStroke2,
+                    pointRadius: 0,
+                    fill: false,
+                    borderWidth: 0
+                }]
+            },
+
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'bottom',
+                    display: false,
+                    labels: {
+                        boxWidth: 8
+                    }
+                },
+                tooltips: {
+                    displayColors: false,
+                },
+                scales: {
+                    xAxes: [{
+                        barPercentage: .5
+                    }]
+                }
+            }
+        });
+
+
+        // chart 2
+        <!--Chart 2：定义一个环形图doughnut，展示 GET 和 POST 请求的比例-->
+        var ctx = document.getElementById("chart2").getContext('2d');
+
+        var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+        gradientStroke1.addColorStop(0, '#FF8405');
+        gradientStroke1.addColorStop(1, '#FFD938');
+
+        var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+        gradientStroke2.addColorStop(0, '#4453DB');
+        gradientStroke2.addColorStop(1, '#A3DFD2');
+
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ["GET", "POST"],
+                datasets: [{
+                    backgroundColor: [
+                        gradientStroke1,
+                        gradientStroke2,
+                    ],
+                    hoverBackgroundColor: [
+                        gradientStroke1,
+                        gradientStroke2,
+                    ],
+                    data: [75, 25],
+                    borderWidth: [1, 1]
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutoutPercentage: 75,
+                legend: {
+                    position: 'bottom',
+                    display: false,
+                    labels: {
+                        boxWidth: 8
+                    }
+                },
+                tooltips: {
+                    displayColors: false,
+                }
+            }
+        });
+
+    </script>
+
+{% endblock %}
+
+
